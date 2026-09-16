@@ -1,0 +1,16 @@
+# Build outputs
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.md
+
+# Note: actual build output lands in d:\output\... (BaseOutputPath in
+# dsAppLaunch.vbproj), outside this repo entirely — nothing to ignore for it here.
+
+# OS cruft
+Thumbs.db
+Desktop.ini

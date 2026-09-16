@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0-windows8.0</TargetFramework>
+        <StartupObject>Sub Main</StartupObject>
+        <UseWindowsForms>true</UseWindowsForms>
+        <MyType>WindowsForms</MyType>
+        <ApplicationIcon>FeathDS.ico</ApplicationIcon>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+        <BaseOutputPath>d:\output\$(Configuration)\$(AssemblyName)\</BaseOutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        <OutputPath>$(BaseOutputPath)</OutputPath>
+    </PropertyGroup>
+
+
+    <PropertyGroup>
+        <MajorVersion>2</MajorVersion>
+        <MinorVersion>3</MinorVersion>
+        <ProjectStartDate>2000-01-01</ProjectStartDate>
+        <SecondsFromMidNight>$([MSBuild]::Divide($([System.DateTime]::Now.TimeOfDay.TotalSeconds), 2))</SecondsFromMidNight>
+        <BuildNumber>$([System.DateTime]::Now.Subtract($([System.DateTime]::Parse($(ProjectStartDate)))).Days)</BuildNumber>
+        <RevisionNumber>$(SecondsFromMidNight.Split('.')[0])</RevisionNumber>
+        <Version>$(MajorVersion).$(MinorVersion).$(BuildNumber).$(RevisionNumber)</Version>
+        <AssemblyTitle>Washery</AssemblyTitle>
+        <OptionStrict>On</OptionStrict>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Content Include="FeathDS.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Import Include="System.Data" />
+        <Import Include="System.Drawing" />
+        <Import Include="System.Windows.Forms" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="My Project\Application.Designer.vb">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Application.myapp</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="apps.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="My Project\Application.myapp">
+            <Generator>MyApplicationCodeGenerator</Generator>
+            <LastGenOutput>Application.Designer.vb</LastGenOutput>
+        </None>
+    </ItemGroup>
+
+</Project>
