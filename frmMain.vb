@@ -1,5 +1,4 @@
 ﻿Imports System.IO
-Imports System.Text.Json
 
 Public Class frmMain
     Private WithEvents flowLayout As FlowLayoutPanel
@@ -22,7 +21,7 @@ Public Class frmMain
         FontName = Me.Font.Name
         FontSize = Me.Font.Size
         ' --- Ensure apps.json exists on startup ---
-        EnsureJsonFileExists("apps.json")
+        EnsureJsonFileExists()
 
         ' --- Top Header Panel ---
         topPanel = New Panel With {
@@ -52,7 +51,7 @@ Public Class frmMain
             .FlatStyle = FlatStyle.Flat,
             .Cursor = Cursors.Hand
         }
-        AddHandler btnReload.Click, Sub(s, ev) LoadApplications("apps.json")
+        AddHandler btnReload.Click, Sub(s, ev) LoadApplications()
         toolTip.SetToolTip(btnReload, "Reload application list")
 
         btnSettings = New Button With {
@@ -108,18 +107,12 @@ Public Class frmMain
         Me.Controls.Add(flowLayout)
         flowLayout.BringToFront()
 
-        LoadApplications("apps.json")
+        LoadApplications()
     End Sub
 
-    ''' <summary>
-    ''' Automatically creates the apps.json file if it does not exist.
-    ''' </summary>
-    Private Sub EnsureJsonFileExists(jsonFilePath As String)
+    Private Sub EnsureJsonFileExists()
         Try
-            If Not File.Exists(jsonFilePath) Then
-                ' Create default empty JSON structure
-                File.WriteAllText(jsonFilePath, "[]")
-            End If
+            AppRepository.EnsureExists()
         Catch ex As Exception
             MessageBox.Show($"Could not create missing JSON file: {ex.Message}", "File System Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End Try
@@ -143,28 +136,21 @@ Public Class frmMain
         flowLayout.ResumeLayout()
     End Sub
 
-    Public Sub LoadApplications(jsonFilePath As String)
-        EnsureJsonFileExists(jsonFilePath)
+    Public Sub LoadApplications()
+        EnsureJsonFileExists()
 
         flowLayout.SuspendLayout()
         flowLayout.Controls.Clear()
 
         Try
-            Dim jsonText As String = File.ReadAllText(jsonFilePath)
-            Dim options = New JsonSerializerOptions With {.PropertyNameCaseInsensitive = True}
-            appsList = JsonSerializer.Deserialize(Of List(Of AppConfig))(jsonText, options)
-
-            If appsList Is Nothing Then appsList = New List(Of AppConfig)()
+            appsList = AppRepository.Load()
 
             Dim headerWidth As Integer = Math.Max(200, flowLayout.ClientSize.Width - 35)
 
-            ' Grouping by Firm Name
-            Dim firmGroups = appsList.GroupBy(Function(x) If(String.IsNullOrWhiteSpace(x.FirmName), "", x.FirmName))
-
-            For Each firmGroup In firmGroups
-                ' Firm Header Label
+            For Each firmGroup In AppGrouping.GroupAndSort(appsList)
+                ' Group Header Label
                 Dim lblFirmHeader As New Label With {
-                    .Text = If(String.IsNullOrEmpty(firmGroup.Key), "(Ungrouped)", firmGroup.Key),
+                    .Text = firmGroup.Title,
                     .Font = New Font("Segoe UI", 12, FontStyle.Bold),
                     .ForeColor = Color.FromArgb(41, 128, 185),
                     .Size = New Size(headerWidth, 24),
@@ -176,10 +162,7 @@ Public Class frmMain
                 flowLayout.Controls.Add(lblFirmHeader)
                 flowLayout.SetFlowBreak(lblFirmHeader, True)
 
-                ' Arrange cards sequentially by Financial Year in DESCENDING order
-                Dim orderedApps = firmGroup.OrderByDescending(Function(x) If(String.IsNullOrWhiteSpace(x.FinancialYear), "", x.FinancialYear)).ToList()
-
-                For Each app In orderedApps
+                For Each app In firmGroup.Apps
                     Dim card As Panel = CreateAppCard(app)
                     flowLayout.Controls.Add(card)
                 Next
@@ -217,7 +200,7 @@ Public Class frmMain
             .Size = New Size(32, 32),
             .Location = New Point(8, 8),
             .SizeMode = PictureBoxSizeMode.Zoom,
-            .Image = GetAppIcon(app)
+            .Image = IconProvider.GetAppIcon(app)
         }
         toolTip.SetToolTip(picIcon, exeFileName)
 
@@ -325,10 +308,15 @@ Public Class frmMain
     End Function
 
     Private Async Function LaunchAppWithBusyState(card As Panel, btnLaunch As Button, app As AppConfig) As Task
-        If String.IsNullOrEmpty(app.ExecutablePath) OrElse Not File.Exists(app.ExecutablePath) Then
-            MessageBox.Show($"Target executable not found at:" & vbCrLf & app.ExecutablePath, "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return
-        End If
+        Dim result As LaunchResult = AppLauncher.Launch(app)
+        Select Case result.Status
+            Case LaunchStatus.NotFound
+                MessageBox.Show("Target executable not found at:" & vbCrLf & app.ExecutablePath, "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Return
+            Case LaunchStatus.Failed
+                MessageBox.Show("Error launching application: " & result.Message, "Execution Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return
+        End Select
 
         Dim origColor As Color = card.BackColor
         card.BackColor = Color.FromArgb(254, 249, 231)
@@ -336,15 +324,7 @@ Public Class frmMain
         btnLaunch.Text = "⏳ Busy..."
 
         Try
-            Dim pInfo As New ProcessStartInfo With {
-                .FileName = app.ExecutablePath,
-                .WorkingDirectory = Path.GetDirectoryName(app.ExecutablePath),
-                .UseShellExecute = True
-            }
-            Process.Start(pInfo)
             Await Task.Delay(1500)
-        Catch ex As Exception
-            MessageBox.Show("Error launching application: " & ex.Message, "Execution Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             card.BackColor = origColor
             btnLaunch.Text = "▶ Launch"
@@ -352,25 +332,10 @@ Public Class frmMain
         End Try
     End Function
 
-    Private Function GetAppIcon(app As AppConfig) As Image
-        If Not String.IsNullOrEmpty(app.IconPath) AndAlso File.Exists(app.IconPath) Then
-            Try : Return Image.FromFile(app.IconPath) : Catch : End Try
-        End If
-
-        If Not String.IsNullOrEmpty(app.ExecutablePath) AndAlso File.Exists(app.ExecutablePath) Then
-            Try
-                Dim extractedIcon As Icon = Icon.ExtractAssociatedIcon(app.ExecutablePath)
-                If extractedIcon IsNot Nothing Then Return extractedIcon.ToBitmap()
-            Catch : End Try
-        End If
-
-        Return SystemIcons.Application.ToBitmap()
-    End Function
-
     Private Sub OpenSettings(Optional targetAppId As String = "")
         Dim settingsForm As New frmSettings(targetAppId)
         If settingsForm.ShowDialog() = DialogResult.OK Then
-            LoadApplications("apps.json")
+            LoadApplications()
         End If
     End Sub
 

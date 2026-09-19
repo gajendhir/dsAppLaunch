@@ -1,5 +1,4 @@
 ﻿Imports System.IO
-Imports System.Text.Json
 
 Public Class frmSettings
     Inherits Form
@@ -156,19 +155,11 @@ Public Class frmSettings
     End Sub
 
     Private Sub LoadData()
-        If File.Exists("apps.json") Then
-            Try
-                Dim jsonText As String = File.ReadAllText("apps.json")
-                Dim options = New JsonSerializerOptions With {.PropertyNameCaseInsensitive = True}
-                currentApps = JsonSerializer.Deserialize(Of List(Of AppConfig))(jsonText, options)
-            Catch
-                currentApps = New List(Of AppConfig)()
-            End Try
-        Else
+        Try
+            currentApps = AppRepository.Load()
+        Catch
             currentApps = New List(Of AppConfig)()
-        End If
-
-        If currentApps Is Nothing Then currentApps = New List(Of AppConfig)()
+        End Try
 
         ' Bind ListBox
         isBinding = True
@@ -275,15 +266,8 @@ Public Class frmSettings
         For Each filePath As String In droppedPaths
             If Not File.Exists(filePath) Then Continue For
 
-            Dim newApp As New AppConfig With {
-                .Id = Guid.NewGuid().ToString(),
-                .Name = Path.GetFileNameWithoutExtension(filePath),
-                .ExecutablePath = filePath,
-                .Category = "General",
-                .CardColor = "#FFFFFF"
-            }
-            currentApps.Add(newApp)
-            lastAdded = newApp
+            lastAdded = AppConfig.FromFile(filePath)
+            currentApps.Add(lastAdded)
         Next
 
         If lastAdded Is Nothing Then Return
@@ -349,12 +333,7 @@ Public Class frmSettings
     End Sub
 
     Private Sub BtnAdd_Click(sender As Object, e As EventArgs)
-        Dim newApp As New AppConfig With {
-            .Id = Guid.NewGuid().ToString(),
-            .Name = "New Application",
-            .Category = "General",
-            .CardColor = "#FFFFFF"
-        }
+        Dim newApp As AppConfig = AppConfig.Create("New Application", "")
         currentApps.Add(newApp)
 
         isBinding = True
@@ -402,9 +381,7 @@ Public Class frmSettings
 
     Private Sub BtnSave_Click(sender As Object, e As EventArgs)
         Try
-            Dim options = New JsonSerializerOptions With {.WriteIndented = True}
-            Dim jsonText As String = JsonSerializer.Serialize(currentApps, options)
-            File.WriteAllText("apps.json", jsonText)
+            AppRepository.Save(currentApps)
             MessageBox.Show("Configuration saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Me.DialogResult = DialogResult.OK
             Me.Close()
