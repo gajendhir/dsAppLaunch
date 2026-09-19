@@ -26,7 +26,7 @@
         <BuildNumber>$([System.DateTime]::Now.Subtract($([System.DateTime]::Parse($(ProjectStartDate)))).Days)</BuildNumber>
         <RevisionNumber>$(SecondsFromMidNight.Split('.')[0])</RevisionNumber>
         <Version>$(MajorVersion).$(MinorVersion).$(BuildNumber).$(RevisionNumber)</Version>
-        <AssemblyTitle>Washery</AssemblyTitle>
+        <AssemblyTitle>dsAppLaunch</AssemblyTitle>
         <OptionStrict>On</OptionStrict>
     </PropertyGroup>
 

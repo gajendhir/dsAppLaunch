@@ -48,10 +48,15 @@ Public Class frmSettings
             .Location = New Point(20, 40),
             .Size = New Size(200, 390),
             .DisplayMember = "Name",
-            .Font = New Font("Segoe UI", 9.5F)
+            .Font = New Font("Segoe UI", 9.5F),
+            .AllowDrop = True
         }
         AddHandler lstApps.SelectedIndexChanged, AddressOf LstApps_SelectedIndexChanged
+        AddHandler lstApps.DragEnter, AddressOf LstApps_DragEnter
+        AddHandler lstApps.DragLeave, AddressOf LstApps_DragLeave
+        AddHandler lstApps.DragDrop, AddressOf LstApps_DragDrop
         Me.Controls.Add(lstApps)
+        toolTip.SetToolTip(lstApps, "Drag & drop .exe files (or any file/shortcut) here to add them as new applications")
 
         btnAdd = New Button With {.Text = "+ Add New", .Location = New Point(20, 440), .Size = New Size(95, 32), .Font = New Font("Segoe UI", 9, FontStyle.Bold), .BackColor = Color.White}
         AddHandler btnAdd.Click, AddressOf BtnAdd_Click
@@ -73,9 +78,12 @@ Public Class frmSettings
         Me.Controls.Add(txtName)
 
         Me.Controls.Add(New Label With {.Text = "Executable (.exe) Path:", .Location = New Point(startX, 65), .AutoSize = True})
-        txtExePath = New TextBox With {.Location = New Point(startX, 85), .Size = New Size(fieldWidth, 25)}
+        txtExePath = New TextBox With {.Location = New Point(startX, 85), .Size = New Size(fieldWidth, 25), .AllowDrop = True}
         AddHandler txtExePath.TextChanged, AddressOf UpdateCurrentModel
+        AddHandler txtExePath.DragEnter, AddressOf DropTarget_DragEnter
+        AddHandler txtExePath.DragDrop, AddressOf TxtExePath_DragDrop
         Me.Controls.Add(txtExePath)
+        toolTip.SetToolTip(txtExePath, "Browse, or drag & drop a file here")
 
         btnBrowseExe = New Button With {.Text = "Browse...", .Location = New Point(startX + fieldWidth + 5, 84), .Size = New Size(75, 27)}
         AddHandler btnBrowseExe.Click, AddressOf BtnBrowseExe_Click
@@ -83,9 +91,12 @@ Public Class frmSettings
         toolTip.SetToolTip(btnBrowseExe, "Browse for the application's executable (.exe) file")
 
         Me.Controls.Add(New Label With {.Text = "Custom Icon Path (Optional):", .Location = New Point(startX, 115), .AutoSize = True})
-        txtIconPath = New TextBox With {.Location = New Point(startX, 135), .Size = New Size(fieldWidth, 25)}
+        txtIconPath = New TextBox With {.Location = New Point(startX, 135), .Size = New Size(fieldWidth, 25), .AllowDrop = True}
         AddHandler txtIconPath.TextChanged, AddressOf UpdateCurrentModel
+        AddHandler txtIconPath.DragEnter, AddressOf DropTarget_DragEnter
+        AddHandler txtIconPath.DragDrop, AddressOf TxtIconPath_DragDrop
         Me.Controls.Add(txtIconPath)
+        toolTip.SetToolTip(txtIconPath, "Browse, or drag & drop an icon/image file here")
 
         btnBrowseIcon = New Button With {.Text = "Browse...", .Location = New Point(startX + fieldWidth + 5, 134), .Size = New Size(75, 27)}
         AddHandler btnBrowseIcon.Click, AddressOf BtnBrowseIcon_Click
@@ -229,6 +240,83 @@ Public Class frmSettings
         lstApps.DisplayMember = "Name"
         lstApps.SelectedIndex = idx
         isBinding = False
+    End Sub
+
+    Private Sub DropTarget_DragEnter(sender As Object, e As DragEventArgs)
+        e.Effect = If(e.Data.GetDataPresent(DataFormats.FileDrop), DragDropEffects.Copy, DragDropEffects.None)
+    End Sub
+
+    Private Sub LstApps_DragEnter(sender As Object, e As DragEventArgs)
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            e.Effect = DragDropEffects.Copy
+            lstApps.BackColor = Color.FromArgb(230, 244, 255)
+        Else
+            e.Effect = DragDropEffects.None
+        End If
+    End Sub
+
+    Private Sub LstApps_DragLeave(sender As Object, e As EventArgs)
+        lstApps.BackColor = SystemColors.Window
+    End Sub
+
+    ''' <summary>
+    ''' Adds one new application entry per dropped file (folders are ignored).
+    ''' ProcessStartInfo.UseShellExecute in frmMain launches any file type via its
+    ''' shell association, so the dropped path is used as-is (including .lnk shortcuts)
+    ''' without needing to resolve shortcut targets.
+    ''' </summary>
+    Private Sub LstApps_DragDrop(sender As Object, e As DragEventArgs)
+        lstApps.BackColor = SystemColors.Window
+        If Not e.Data.GetDataPresent(DataFormats.FileDrop) Then Return
+
+        Dim droppedPaths() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
+        Dim lastAdded As AppConfig = Nothing
+
+        For Each filePath As String In droppedPaths
+            If Not File.Exists(filePath) Then Continue For
+
+            Dim newApp As New AppConfig With {
+                .Id = Guid.NewGuid().ToString(),
+                .Name = Path.GetFileNameWithoutExtension(filePath),
+                .ExecutablePath = filePath,
+                .Category = "General",
+                .CardColor = "#FFFFFF"
+            }
+            currentApps.Add(newApp)
+            lastAdded = newApp
+        Next
+
+        If lastAdded Is Nothing Then Return
+
+        isBinding = True
+        lstApps.DataSource = Nothing
+        lstApps.DataSource = currentApps
+        lstApps.DisplayMember = "Name"
+        isBinding = False
+
+        lstApps.SelectedItem = lastAdded
+        PopulateFields(lastAdded)
+    End Sub
+
+    Private Sub TxtExePath_DragDrop(sender As Object, e As DragEventArgs)
+        If lstApps.SelectedItem Is Nothing OrElse Not e.Data.GetDataPresent(DataFormats.FileDrop) Then Return
+
+        Dim droppedPaths() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
+        If droppedPaths.Length = 0 OrElse Not File.Exists(droppedPaths(0)) Then Return
+
+        txtExePath.Text = droppedPaths(0)
+        If String.IsNullOrEmpty(txtName.Text) Then
+            txtName.Text = Path.GetFileNameWithoutExtension(droppedPaths(0))
+        End If
+    End Sub
+
+    Private Sub TxtIconPath_DragDrop(sender As Object, e As DragEventArgs)
+        If lstApps.SelectedItem Is Nothing OrElse Not e.Data.GetDataPresent(DataFormats.FileDrop) Then Return
+
+        Dim droppedPaths() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
+        If droppedPaths.Length = 0 OrElse Not File.Exists(droppedPaths(0)) Then Return
+
+        txtIconPath.Text = droppedPaths(0)
     End Sub
 
     Private Sub BtnPickColor_Click(sender As Object, e As EventArgs)

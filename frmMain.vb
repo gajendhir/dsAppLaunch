@@ -6,7 +6,7 @@ Public Class frmMain
     Private topPanel As Panel
     Private bottomPanel As Panel
     Private lblHeaderTitle As Label
-    Private lblSupportFooter As Label
+    Private lblSupportFooter As LinkLabel
     Private btnReload As Button
     Private btnSettings As Button
     Private appsList As List(Of AppConfig)
@@ -82,13 +82,18 @@ Public Class frmMain
             .Padding = New Padding(0, 0, 20, 0)
         }
 
-        lblSupportFooter = New Label With {
+        lblSupportFooter = New LinkLabel With {
             .Text = "S/W Support By Data Spec",
             .Font = New Font(FontName, FontSize, FontStyle.Regular),
-            .ForeColor = Color.Red,
+            .LinkColor = Color.Red,
+            .ActiveLinkColor = Color.Red,
+            .VisitedLinkColor = Color.Red,
+            .LinkBehavior = LinkBehavior.HoverUnderline,
             .Dock = DockStyle.Fill,
             .TextAlign = ContentAlignment.MiddleRight
         }
+        AddHandler lblSupportFooter.LinkClicked, Sub(s, ev) Process.Start(New ProcessStartInfo With {.FileName = "https://www.dataspec.info", .UseShellExecute = True})
+        toolTip.SetToolTip(lblSupportFooter, "Visit https://www.dataspec.info")
 
         bottomPanel.Controls.Add(lblSupportFooter)
         Me.Controls.Add(bottomPanel)
@@ -159,7 +164,7 @@ Public Class frmMain
             For Each firmGroup In firmGroups
                 ' Firm Header Label
                 Dim lblFirmHeader As New Label With {
-                    .Text = firmGroup.Key,
+                    .Text = If(String.IsNullOrEmpty(firmGroup.Key), "(Ungrouped)", firmGroup.Key),
                     .Font = New Font("Segoe UI", 12, FontStyle.Bold),
                     .ForeColor = Color.FromArgb(41, 128, 185),
                     .Size = New Size(headerWidth, 24),
