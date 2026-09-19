@@ -1,157 +1,22 @@
-﻿Imports System.IO
+Imports System.IO
 
 Public Class frmSettings
-    Inherits Form
-
-    Private lstApps As ListBox
-    Private txtName As TextBox
-    Private txtExePath As TextBox
-    Private txtIconPath As TextBox
-    Private txtCategory As TextBox
-    Private txtDescription As TextBox
-    Private txtGroup As TextBox
-    Private txtSubGroup As TextBox
-    Private pnlColorPreview As Panel
-
-    Private btnBrowseExe As Button
-    Private btnBrowseIcon As Button
-    Private btnPickColor As Button
-    Private btnAdd As Button
-    Private btnRemove As Button
-    Private btnSave As Button
-    Private lblFooterSupport As Label
-    Private toolTip As New ToolTip With {.AutoPopDelay = 5000, .InitialDelay = 400, .ReshowDelay = 200}
 
     Private currentApps As List(Of AppConfig)
     Private isBinding As Boolean = False
     Private selectedAppId As String = ""
 
-    Public Sub New(Optional appIdToSelect As String = "")
-        Me.selectedAppId = appIdToSelect
-        InitializeCustomComponents()
-        LoadData()
+    Public Sub New()
+        InitializeComponent()
     End Sub
 
-    Private Sub InitializeCustomComponents()
-        Me.Text = "Data Spec Application Launcher - Manager"
-        Me.Size = New Size(720, 560)
-        Me.StartPosition = FormStartPosition.CenterParent
-        Me.FormBorderStyle = FormBorderStyle.FixedDialog
-        Me.MaximizeBox = False
-        Me.MinimizeBox = False
-        Me.BackColor = Color.FromArgb(245, 246, 250)
+    Public Sub New(appIdToSelect As String)
+        Me.New()
+        selectedAppId = appIdToSelect
+    End Sub
 
-        Me.Controls.Add(New Label With {.Text = "Configured Applications:", .Location = New Point(20, 15), .AutoSize = True, .Font = New Font("Segoe UI", 9, FontStyle.Bold)})
-
-        lstApps = New ListBox With {
-            .Location = New Point(20, 40),
-            .Size = New Size(200, 390),
-            .DisplayMember = "Name",
-            .Font = New Font("Segoe UI", 9.5F),
-            .AllowDrop = True
-        }
-        AddHandler lstApps.SelectedIndexChanged, AddressOf LstApps_SelectedIndexChanged
-        AddHandler lstApps.DragEnter, AddressOf LstApps_DragEnter
-        AddHandler lstApps.DragLeave, AddressOf LstApps_DragLeave
-        AddHandler lstApps.DragDrop, AddressOf LstApps_DragDrop
-        Me.Controls.Add(lstApps)
-        toolTip.SetToolTip(lstApps, "Drag & drop .exe files (or any file/shortcut) here to add them as new applications")
-
-        btnAdd = New Button With {.Text = "+ Add New", .Location = New Point(20, 440), .Size = New Size(95, 32), .Font = New Font("Segoe UI", 9, FontStyle.Bold), .BackColor = Color.White}
-        AddHandler btnAdd.Click, AddressOf BtnAdd_Click
-        Me.Controls.Add(btnAdd)
-        toolTip.SetToolTip(btnAdd, "Add a new application entry")
-
-        btnRemove = New Button With {.Text = "- Remove", .Location = New Point(125, 440), .Size = New Size(95, 32), .Font = New Font("Segoe UI", 9, FontStyle.Bold), .ForeColor = Color.DarkRed, .BackColor = Color.White}
-        AddHandler btnRemove.Click, AddressOf BtnRemove_Click
-        Me.Controls.Add(btnRemove)
-        toolTip.SetToolTip(btnRemove, "Remove the selected application")
-
-        Dim startX As Integer = 240
-        Dim fieldWidth As Integer = 320
-
-        ' Fields
-        Me.Controls.Add(New Label With {.Text = "Application Name:", .Location = New Point(startX, 15), .AutoSize = True})
-        txtName = New TextBox With {.Location = New Point(startX, 35), .Size = New Size(fieldWidth + 80, 25)}
-        AddHandler txtName.TextChanged, AddressOf UpdateCurrentModel
-        Me.Controls.Add(txtName)
-
-        Me.Controls.Add(New Label With {.Text = "Executable (.exe) Path:", .Location = New Point(startX, 65), .AutoSize = True})
-        txtExePath = New TextBox With {.Location = New Point(startX, 85), .Size = New Size(fieldWidth, 25), .AllowDrop = True}
-        AddHandler txtExePath.TextChanged, AddressOf UpdateCurrentModel
-        AddHandler txtExePath.DragEnter, AddressOf DropTarget_DragEnter
-        AddHandler txtExePath.DragDrop, AddressOf TxtExePath_DragDrop
-        Me.Controls.Add(txtExePath)
-        toolTip.SetToolTip(txtExePath, "Browse, or drag & drop a file here")
-
-        btnBrowseExe = New Button With {.Text = "Browse...", .Location = New Point(startX + fieldWidth + 5, 84), .Size = New Size(75, 27)}
-        AddHandler btnBrowseExe.Click, AddressOf BtnBrowseExe_Click
-        Me.Controls.Add(btnBrowseExe)
-        toolTip.SetToolTip(btnBrowseExe, "Browse for the application's executable (.exe) file")
-
-        Me.Controls.Add(New Label With {.Text = "Custom Icon Path (Optional):", .Location = New Point(startX, 115), .AutoSize = True})
-        txtIconPath = New TextBox With {.Location = New Point(startX, 135), .Size = New Size(fieldWidth, 25), .AllowDrop = True}
-        AddHandler txtIconPath.TextChanged, AddressOf UpdateCurrentModel
-        AddHandler txtIconPath.DragEnter, AddressOf DropTarget_DragEnter
-        AddHandler txtIconPath.DragDrop, AddressOf TxtIconPath_DragDrop
-        Me.Controls.Add(txtIconPath)
-        toolTip.SetToolTip(txtIconPath, "Browse, or drag & drop an icon/image file here")
-
-        btnBrowseIcon = New Button With {.Text = "Browse...", .Location = New Point(startX + fieldWidth + 5, 134), .Size = New Size(75, 27)}
-        AddHandler btnBrowseIcon.Click, AddressOf BtnBrowseIcon_Click
-        Me.Controls.Add(btnBrowseIcon)
-        toolTip.SetToolTip(btnBrowseIcon, "Browse for a custom icon image")
-
-        Me.Controls.Add(New Label With {.Text = "Group (Optional):", .Location = New Point(startX, 165), .AutoSize = True})
-        txtGroup = New TextBox With {.Location = New Point(startX, 185), .Size = New Size(200, 25)}
-        AddHandler txtGroup.TextChanged, AddressOf UpdateCurrentModel
-        Me.Controls.Add(txtGroup)
-
-        Me.Controls.Add(New Label With {.Text = "Sub Group (Optional):", .Location = New Point(startX + 210, 165), .AutoSize = True})
-        txtSubGroup = New TextBox With {.Location = New Point(startX + 210, 185), .Size = New Size(190, 25)}
-        AddHandler txtSubGroup.TextChanged, AddressOf UpdateCurrentModel
-        Me.Controls.Add(txtSubGroup)
-
-        Me.Controls.Add(New Label With {.Text = "Category:", .Location = New Point(startX, 215), .AutoSize = True})
-        txtCategory = New TextBox With {.Location = New Point(startX, 235), .Size = New Size(200, 25)}
-        AddHandler txtCategory.TextChanged, AddressOf UpdateCurrentModel
-        Me.Controls.Add(txtCategory)
-
-        Me.Controls.Add(New Label With {.Text = "Card Background Color:", .Location = New Point(startX + 210, 215), .AutoSize = True})
-        pnlColorPreview = New Panel With {.Location = New Point(startX + 210, 235), .Size = New Size(30, 25), .BorderStyle = BorderStyle.FixedSingle, .BackColor = Color.White}
-        btnPickColor = New Button With {.Text = "Pick Color...", .Location = New Point(startX + 245, 234), .Size = New Size(155, 27)}
-        AddHandler btnPickColor.Click, AddressOf BtnPickColor_Click
-        Me.Controls.Add(pnlColorPreview)
-        Me.Controls.Add(btnPickColor)
-        toolTip.SetToolTip(btnPickColor, "Choose the card's background color")
-
-        Me.Controls.Add(New Label With {.Text = "Description:", .Location = New Point(startX, 265), .AutoSize = True})
-        txtDescription = New TextBox With {.Location = New Point(startX, 285), .Size = New Size(fieldWidth + 80, 60), .Multiline = True}
-        AddHandler txtDescription.TextChanged, AddressOf UpdateCurrentModel
-        Me.Controls.Add(txtDescription)
-
-        btnSave = New Button With {
-            .Text = "💾 Save & Apply Changes",
-            .Location = New Point(startX + 180, 440),
-            .Size = New Size(220, 35),
-            .Font = New Font("Segoe UI", 10, FontStyle.Bold),
-            .BackColor = Color.FromArgb(46, 204, 113),
-            .ForeColor = Color.White,
-            .FlatStyle = FlatStyle.Flat
-        }
-        AddHandler btnSave.Click, AddressOf BtnSave_Click
-        Me.Controls.Add(btnSave)
-        toolTip.SetToolTip(btnSave, "Save changes to apps.json")
-
-        lblFooterSupport = New Label With {
-            .Text = "S/W Support By Data Spec",
-            .Font = New Font("Segoe UI", 8.5F, FontStyle.Bold),
-            .ForeColor = Color.Red,
-            .Location = New Point(0, 495),
-            .Size = New Size(705, 20),
-            .TextAlign = ContentAlignment.MiddleRight
-        }
-        Me.Controls.Add(lblFooterSupport)
+    Private Sub frmSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        LoadData()
     End Sub
 
     Private Sub LoadData()
@@ -206,12 +71,12 @@ Public Class frmSettings
         isBinding = False
     End Sub
 
-    Private Sub LstApps_SelectedIndexChanged(sender As Object, e As EventArgs)
+    Private Sub LstApps_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstApps.SelectedIndexChanged
         If isBinding OrElse lstApps.SelectedItem Is Nothing Then Return
         PopulateFields(CType(lstApps.SelectedItem, AppConfig))
     End Sub
 
-    Private Sub UpdateCurrentModel(sender As Object, e As EventArgs)
+    Private Sub UpdateCurrentModel(sender As Object, e As EventArgs) Handles txtName.TextChanged, txtExePath.TextChanged, txtIconPath.TextChanged, txtGroup.TextChanged, txtSubGroup.TextChanged, txtCategory.TextChanged, txtDescription.TextChanged
         If isBinding OrElse lstApps.SelectedItem Is Nothing Then Return
 
         Dim selectedApp As AppConfig = CType(lstApps.SelectedItem, AppConfig)
@@ -233,11 +98,11 @@ Public Class frmSettings
         isBinding = False
     End Sub
 
-    Private Sub DropTarget_DragEnter(sender As Object, e As DragEventArgs)
+    Private Sub DropTarget_DragEnter(sender As Object, e As DragEventArgs) Handles txtExePath.DragEnter, txtIconPath.DragEnter
         e.Effect = If(e.Data.GetDataPresent(DataFormats.FileDrop), DragDropEffects.Copy, DragDropEffects.None)
     End Sub
 
-    Private Sub LstApps_DragEnter(sender As Object, e As DragEventArgs)
+    Private Sub LstApps_DragEnter(sender As Object, e As DragEventArgs) Handles lstApps.DragEnter
         If e.Data.GetDataPresent(DataFormats.FileDrop) Then
             e.Effect = DragDropEffects.Copy
             lstApps.BackColor = Color.FromArgb(230, 244, 255)
@@ -246,17 +111,17 @@ Public Class frmSettings
         End If
     End Sub
 
-    Private Sub LstApps_DragLeave(sender As Object, e As EventArgs)
+    Private Sub LstApps_DragLeave(sender As Object, e As EventArgs) Handles lstApps.DragLeave
         lstApps.BackColor = SystemColors.Window
     End Sub
 
     ''' <summary>
     ''' Adds one new application entry per dropped file (folders are ignored).
-    ''' ProcessStartInfo.UseShellExecute in frmMain launches any file type via its
-    ''' shell association, so the dropped path is used as-is (including .lnk shortcuts)
+    ''' AppLauncher starts files with UseShellExecute, so any file type launches via its
+    ''' shell association and the dropped path is used as-is (including .lnk shortcuts)
     ''' without needing to resolve shortcut targets.
     ''' </summary>
-    Private Sub LstApps_DragDrop(sender As Object, e As DragEventArgs)
+    Private Sub LstApps_DragDrop(sender As Object, e As DragEventArgs) Handles lstApps.DragDrop
         lstApps.BackColor = SystemColors.Window
         If Not e.Data.GetDataPresent(DataFormats.FileDrop) Then Return
 
@@ -282,7 +147,7 @@ Public Class frmSettings
         PopulateFields(lastAdded)
     End Sub
 
-    Private Sub TxtExePath_DragDrop(sender As Object, e As DragEventArgs)
+    Private Sub TxtExePath_DragDrop(sender As Object, e As DragEventArgs) Handles txtExePath.DragDrop
         If lstApps.SelectedItem Is Nothing OrElse Not e.Data.GetDataPresent(DataFormats.FileDrop) Then Return
 
         Dim droppedPaths() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
@@ -294,7 +159,7 @@ Public Class frmSettings
         End If
     End Sub
 
-    Private Sub TxtIconPath_DragDrop(sender As Object, e As DragEventArgs)
+    Private Sub TxtIconPath_DragDrop(sender As Object, e As DragEventArgs) Handles txtIconPath.DragDrop
         If lstApps.SelectedItem Is Nothing OrElse Not e.Data.GetDataPresent(DataFormats.FileDrop) Then Return
 
         Dim droppedPaths() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())
@@ -303,7 +168,7 @@ Public Class frmSettings
         txtIconPath.Text = droppedPaths(0)
     End Sub
 
-    Private Sub BtnPickColor_Click(sender As Object, e As EventArgs)
+    Private Sub BtnPickColor_Click(sender As Object, e As EventArgs) Handles btnPickColor.Click
         Using dlg As New ColorDialog()
             dlg.Color = pnlColorPreview.BackColor
             If dlg.ShowDialog() = DialogResult.OK Then
@@ -313,7 +178,7 @@ Public Class frmSettings
         End Using
     End Sub
 
-    Private Sub BtnBrowseExe_Click(sender As Object, e As EventArgs)
+    Private Sub BtnBrowseExe_Click(sender As Object, e As EventArgs) Handles btnBrowseExe.Click
         Using dlg As New OpenFileDialog()
             dlg.Filter = "Executable Files (*.exe)|*.exe|All Files (*.*)|*.*"
             If dlg.ShowDialog() = DialogResult.OK Then
@@ -325,14 +190,14 @@ Public Class frmSettings
         End Using
     End Sub
 
-    Private Sub BtnBrowseIcon_Click(sender As Object, e As EventArgs)
+    Private Sub BtnBrowseIcon_Click(sender As Object, e As EventArgs) Handles btnBrowseIcon.Click
         Using dlg As New OpenFileDialog()
             dlg.Filter = "Image & Icon Files (*.ico;*.png;*.jpg)|*.ico;*.png;*.jpg|All Files (*.*)|*.*"
             If dlg.ShowDialog() = DialogResult.OK Then txtIconPath.Text = dlg.FileName
         End Using
     End Sub
 
-    Private Sub BtnAdd_Click(sender As Object, e As EventArgs)
+    Private Sub BtnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
         Dim newApp As AppConfig = AppConfig.Create("New Application", "")
         currentApps.Add(newApp)
 
@@ -346,7 +211,7 @@ Public Class frmSettings
         PopulateFields(newApp)
     End Sub
 
-    Private Sub BtnRemove_Click(sender As Object, e As EventArgs)
+    Private Sub BtnRemove_Click(sender As Object, e As EventArgs) Handles btnRemove.Click
         If lstApps.SelectedItem IsNot Nothing Then
             Dim selectedApp As AppConfig = CType(lstApps.SelectedItem, AppConfig)
             currentApps.Remove(selectedApp)
@@ -379,7 +244,7 @@ Public Class frmSettings
         isBinding = False
     End Sub
 
-    Private Sub BtnSave_Click(sender As Object, e As EventArgs)
+    Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
         Try
             AppRepository.Save(currentApps)
             MessageBox.Show("Configuration saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
