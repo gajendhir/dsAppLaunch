@@ -1,0 +1,41 @@
+[
+  {
+    "Id": "00000000-0000-0000-0000-000000000001",
+    "Name": "Notepad",
+    "ExecutablePath": "C:\\Windows\\System32\\notepad.exe",
+    "IconPath": "",
+    "Category": "Utilities",
+    "Description": "Sample entry - replace with your own applications",
+    "Group": "Sample",
+    "SubGroup": "Accessories",
+    "CardColor": "#FFFFFF",
+    "SortOrder": 1,
+    "Selected": false
+  },
+  {
+    "Id": "00000000-0000-0000-0000-000000000002",
+    "Name": "Calculator",
+    "ExecutablePath": "C:\\Windows\\System32\\calc.exe",
+    "IconPath": "",
+    "Category": "Utilities",
+    "Description": "",
+    "Group": "Sample",
+    "SubGroup": "Accessories",
+    "CardColor": "#FFFFFF",
+    "SortOrder": 2,
+    "Selected": false
+  },
+  {
+    "Id": "00000000-0000-0000-0000-000000000003",
+    "Name": "Paint",
+    "ExecutablePath": "C:\\Windows\\System32\\mspaint.exe",
+    "IconPath": "",
+    "Category": "Graphics",
+    "Description": "",
+    "Group": "Sample",
+    "SubGroup": "Graphics",
+    "CardColor": "#FFFFFF",
+    "SortOrder": 1,
+    "Selected": false
+  }
+]

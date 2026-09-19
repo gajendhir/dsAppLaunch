@@ -11,6 +11,10 @@
 
     <PropertyGroup>
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    </PropertyGroup>
+
+    <!-- Author's machine only: redirect build output to d:\output. Elsewhere the default bin\ is used. -->
+    <PropertyGroup Condition="Exists('d:\output')">
         <BaseOutputPath>d:\output\$(Configuration)\$(AssemblyName)\</BaseOutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -49,9 +53,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="apps.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
         <None Update="My Project\Application.myapp">
             <Generator>MyApplicationCodeGenerator</Generator>
             <LastGenOutput>Application.Designer.vb</LastGenOutput>

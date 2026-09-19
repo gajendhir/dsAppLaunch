@@ -2,14 +2,28 @@ Imports System.IO
 Imports System.Text.Json
 
 Public Class AppRepository
-    Public Const FilePath As String = "apps.json"
-    Private Const BackupPath As String = "apps.json.bak"
+    Private Const FileName As String = "apps.json"
+
+    ''' <summary>Per-user, writable config location: %AppData%\Data Spec\dsAppLaunch\apps.json.</summary>
+    Public Shared ReadOnly FilePath As String = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Data Spec", "dsAppLaunch", FileName)
+
+    Private Shared ReadOnly BackupPath As String = FilePath & ".bak"
+
+    ' Pre-2.3 builds kept apps.json next to the exe; it is copied to FilePath once, on first run.
+    Private Shared ReadOnly LegacyPath As String = Path.Combine(AppContext.BaseDirectory, FileName)
 
     Private Shared ReadOnly ReadOptions As New JsonSerializerOptions With {.PropertyNameCaseInsensitive = True}
     Private Shared ReadOnly WriteOptions As New JsonSerializerOptions With {.WriteIndented = True}
 
     Public Shared Sub EnsureExists()
-        If Not File.Exists(FilePath) Then File.WriteAllText(FilePath, "[]")
+        If File.Exists(FilePath) Then Return
+        Directory.CreateDirectory(Path.GetDirectoryName(FilePath))
+        If File.Exists(LegacyPath) Then
+            File.Copy(LegacyPath, FilePath)
+        Else
+            File.WriteAllText(FilePath, "[]")
+        End If
     End Sub
 
     ''' <summary>Returns an empty list if the file is missing; throws if it cannot be read or parsed.</summary>
@@ -34,6 +48,7 @@ Public Class AppRepository
     End Sub
 
     Public Shared Sub Save(apps As IEnumerable(Of AppConfig))
+        Directory.CreateDirectory(Path.GetDirectoryName(FilePath))
         File.WriteAllText(FilePath, JsonSerializer.Serialize(apps.ToList(), WriteOptions))
     End Sub
 End Class

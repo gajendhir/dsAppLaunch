@@ -6,7 +6,18 @@ obj/
 .vs/
 *.user
 *.suo
-*.md
+
+# Real user config (lives in %AppData%\Data Spec\dsAppLaunch at runtime); apps.sample.json is the tracked example
+apps.json
+apps.json.bak
+
+# Installer: dotnet publish staging output consumed by the WiX build
+Installer/publish/
+Installer/bin/
+Installer/obj/
+
+# WiX Toolset CLI extension cache
+.wix/
 
 # Note: actual build output lands in d:\output\... (BaseOutputPath in
 # dsAppLaunch.vbproj), outside this repo entirely — nothing to ignore for it here.
