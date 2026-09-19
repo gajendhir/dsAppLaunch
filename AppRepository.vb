@@ -33,7 +33,7 @@ Public Class AppRepository
         End Try
     End Sub
 
-    Public Shared Sub Save(apps As List(Of AppConfig))
-        File.WriteAllText(FilePath, JsonSerializer.Serialize(apps, WriteOptions))
+    Public Shared Sub Save(apps As IEnumerable(Of AppConfig))
+        File.WriteAllText(FilePath, JsonSerializer.Serialize(apps.ToList(), WriteOptions))
     End Sub
 End Class

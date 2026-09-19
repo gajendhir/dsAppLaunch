@@ -1,8 +1,9 @@
+Imports System.ComponentModel
 Imports System.IO
 
 Public Class frmSettings
 
-    Private currentApps As List(Of AppConfig)
+    Private currentApps As BindingList(Of AppConfig)
     Private isBinding As Boolean = False
     Private selectedAppId As String = ""
 
@@ -20,15 +21,16 @@ Public Class frmSettings
     End Sub
 
     Private Sub LoadData()
+        Dim loaded As List(Of AppConfig)
         Try
-            currentApps = AppRepository.Load()
+            loaded = AppRepository.Load()
         Catch
-            currentApps = New List(Of AppConfig)()
+            loaded = New List(Of AppConfig)()
         End Try
+        currentApps = New BindingList(Of AppConfig)(loaded)
 
-        ' Bind ListBox
+        ' Bind ListBox once; edits below refresh only the changed item
         isBinding = True
-        lstApps.DataSource = Nothing
         lstApps.DataSource = currentApps
         lstApps.DisplayMember = "Name"
         isBinding = False
@@ -90,11 +92,7 @@ Public Class frmSettings
         selectedApp.CardColor = ColorTranslator.ToHtml(pnlColorPreview.BackColor)
 
         isBinding = True
-        Dim idx As Integer = lstApps.SelectedIndex
-        lstApps.DataSource = Nothing
-        lstApps.DataSource = currentApps
-        lstApps.DisplayMember = "Name"
-        lstApps.SelectedIndex = idx
+        currentApps.ResetItem(lstApps.SelectedIndex)
         isBinding = False
     End Sub
 
@@ -136,12 +134,6 @@ Public Class frmSettings
         Next
 
         If lastAdded Is Nothing Then Return
-
-        isBinding = True
-        lstApps.DataSource = Nothing
-        lstApps.DataSource = currentApps
-        lstApps.DisplayMember = "Name"
-        isBinding = False
 
         lstApps.SelectedItem = lastAdded
         PopulateFields(lastAdded)
@@ -201,12 +193,6 @@ Public Class frmSettings
         Dim newApp As AppConfig = AppConfig.Create("New Application", "")
         currentApps.Add(newApp)
 
-        isBinding = True
-        lstApps.DataSource = Nothing
-        lstApps.DataSource = currentApps
-        lstApps.DisplayMember = "Name"
-        isBinding = False
-
         lstApps.SelectedIndex = currentApps.Count - 1
         PopulateFields(newApp)
     End Sub
@@ -215,12 +201,6 @@ Public Class frmSettings
         If lstApps.SelectedItem IsNot Nothing Then
             Dim selectedApp As AppConfig = CType(lstApps.SelectedItem, AppConfig)
             currentApps.Remove(selectedApp)
-
-            isBinding = True
-            lstApps.DataSource = Nothing
-            lstApps.DataSource = currentApps
-            lstApps.DisplayMember = "Name"
-            isBinding = False
 
             If currentApps.Count > 0 Then
                 lstApps.SelectedIndex = 0

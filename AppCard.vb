@@ -9,12 +9,14 @@ Public Class AppCard
     <System.ComponentModel.Browsable(False), System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)>
     Public Property App As AppConfig
 
-    Public Sub Bind(app As AppConfig)
+    ''' <summary>Fills the card from an already-gathered probe, so no file system access happens on the UI thread.</summary>
+    Public Sub Bind(probe As AppProbe)
+        Dim app As AppConfig = probe.App
         Me.App = app
         BackColor = ParseColor(app.CardColor, Color.White)
 
         Dim exeFileName As String = If(String.IsNullOrEmpty(app.ExecutablePath), "", Path.GetFileName(app.ExecutablePath))
-        picIcon.Image = IconProvider.GetAppIcon(app)
+        picIcon.Image = probe.Icon
         toolTip.SetToolTip(picIcon, exeFileName)
 
         lblName.Text = app.Name
@@ -23,9 +25,8 @@ Public Class AppCard
         lblSubGroup.Text = app.SubGroup
         lblSubGroup.Visible = Not String.IsNullOrWhiteSpace(app.SubGroup)
 
-        Dim hasExeDate As Boolean = Not String.IsNullOrEmpty(app.ExecutablePath) AndAlso File.Exists(app.ExecutablePath)
-        lblDate.Visible = hasExeDate
-        If hasExeDate Then lblDate.Text = $"📅 {File.GetLastWriteTime(app.ExecutablePath):dd-MM-yyyy HH:mm}"
+        lblDate.Visible = probe.ExeExists
+        If probe.ExeExists Then lblDate.Text = $"📅 {probe.ExeLastWrite:dd-MM-yyyy HH:mm}"
 
         lblDesc.Text = If(String.IsNullOrEmpty(app.Category), app.Description, $"[{app.Category}] {app.Description}")
 
