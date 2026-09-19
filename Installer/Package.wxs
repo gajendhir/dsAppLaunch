@@ -3,18 +3,20 @@
 
   <Package Name="Data Spec Application Launcher"
            Manufacturer="Data Spec"
-           Version="2.3.0"
+           Version="2.4.0"
            UpgradeCode="BFDF6AF8-8582-47E3-963D-F76EC795412F"
            Compressed="yes">
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of dsAppLaunch is already installed." />
     <MediaTemplate EmbedCab="yes" />
 
-    <Icon Id="AppIcon" SourceFile="$(sys.SOURCEFILEDIR)..\FeathDS.ico" />
+    <Icon Id="AppIcon" SourceFile="$(sys.SOURCEFILEDIR)..\DataSpec.ico" />
     <Property Id="ARPPRODUCTICON" Value="AppIcon" />
     <Property Id="ARPURLINFOABOUT" Value="https://www.dataspec.info" />
 
     <WixVariable Id="WixUILicenseRtf" Value="$(sys.SOURCEFILEDIR)License.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="$(sys.SOURCEFILEDIR)Banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="$(sys.SOURCEFILEDIR)Dialog.bmp" />
 
     <StandardDirectory Id="ProgramFiles64Folder">
       <Directory Id="INSTALLFOLDER" Name="Data Spec Application Launcher" />
