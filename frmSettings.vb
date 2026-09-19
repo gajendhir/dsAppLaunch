@@ -17,15 +17,19 @@ Public Class frmSettings
     End Sub
 
     Private Sub frmSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        LoadData()
+        If Not LoadData() Then Close()
     End Sub
 
-    Private Sub LoadData()
+    ''' <summary>Returns False (after telling the user) if apps.json exists but can't be read, so a later Save can't overwrite it.</summary>
+    Private Function LoadData() As Boolean
         Dim loaded As List(Of AppConfig)
         Try
             loaded = AppRepository.Load()
-        Catch
-            loaded = New List(Of AppConfig)()
+        Catch ex As Exception
+            MessageBox.Show("Settings can't be opened because apps.json could not be read:" & vbCrLf & vbCrLf & ex.Message & vbCrLf & vbCrLf &
+                            "Fix or delete the file and try again. It has not been changed.",
+                            "apps.json unreadable", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return False
         End Try
         currentApps = New BindingList(Of AppConfig)(loaded)
 
@@ -51,7 +55,8 @@ Public Class frmSettings
         Else
             ClearFields()
         End If
-    End Sub
+        Return True
+    End Function
 
     Private Sub PopulateFields(selectedApp As AppConfig)
         If selectedApp Is Nothing Then Return

@@ -51,7 +51,7 @@ Partial Class AppCard
         lblName.ForeColor = Color.FromArgb(CByte(44), CByte(62), CByte(80))
         lblName.Location = New Point(48, 6)
         lblName.Name = "lblName"
-        lblName.Size = New Size(150, 18)
+        lblName.Size = New Size(150, 20)
         lblName.TabIndex = 1
         '
         ' lblSubGroup
@@ -59,9 +59,9 @@ Partial Class AppCard
         lblSubGroup.AutoEllipsis = True
         lblSubGroup.Font = New Font("Segoe UI", 9.9F, FontStyle.Italic)
         lblSubGroup.ForeColor = Color.FromArgb(CByte(127), CByte(140), CByte(141))
-        lblSubGroup.Location = New Point(48, 25)
+        lblSubGroup.Location = New Point(48, 27)
         lblSubGroup.Name = "lblSubGroup"
-        lblSubGroup.Size = New Size(150, 15)
+        lblSubGroup.Size = New Size(150, 19)
         lblSubGroup.TabIndex = 2
         '
         ' lblDate
@@ -69,18 +69,18 @@ Partial Class AppCard
         lblDate.AutoEllipsis = True
         lblDate.Cursor = Cursors.Hand
         lblDate.ForeColor = Color.FromArgb(CByte(39), CByte(174), CByte(96))
-        lblDate.Location = New Point(48, 41)
+        lblDate.Location = New Point(48, 47)
         lblDate.Name = "lblDate"
-        lblDate.Size = New Size(150, 15)
+        lblDate.Size = New Size(150, 16)
         lblDate.TabIndex = 3
         '
         ' lblDesc
         '
         lblDesc.AutoEllipsis = True
         lblDesc.ForeColor = Color.DimGray
-        lblDesc.Location = New Point(48, 57)
+        lblDesc.Location = New Point(48, 64)
         lblDesc.Name = "lblDesc"
-        lblDesc.Size = New Size(150, 23)
+        lblDesc.Size = New Size(150, 20)
         lblDesc.TabIndex = 4
         '
         ' btnSettings

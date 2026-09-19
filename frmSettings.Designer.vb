@@ -309,6 +309,7 @@ Partial Class frmSettings
         btnSave.TabIndex = 26
         btnSave.Text = "💾 Save & Apply Changes"
         toolTip.SetToolTip(btnSave, "Save changes to apps.json")
+        btnSave.UseMnemonic = False
         btnSave.UseVisualStyleBackColor = False
         '
         ' lblFooterSupport
