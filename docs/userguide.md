@@ -30,11 +30,11 @@ so it is still there if you reinstall.
 
 ## Step 1 — Open Settings
 
-The first time you start dsAppLaunch the screen is empty. Click the **⚙**
-button at the top right of the window to open the **Manager**.
+The first time you start dsAppLaunch the screen is empty. Click the **gear
+button** (⚙) at the top right of the window to open the **Manager**.
 
 You can also open Manager for one particular program by clicking the small
-**⚙** on its card — the Manager opens with that program already selected.
+gear on its card — the Manager opens with that program already selected.
 
 ## Step 2 — Add your applications
 
@@ -58,7 +58,7 @@ For each entry you can set:
 | **Group** | Optional. Cards with the same group appear together under one heading (for example *Office* or *Accounts*) |
 | **Sub Group** | Optional. A second label shown on the card (for example a year or a branch) |
 | **Category** | A short label such as *Utilities* |
-| **Card Background Color** | Click **Pick Color...** to colour-code the card |
+| **Card Background Color** | Click **Pick Color...** to colour-code the card. The colour appears as a stripe down the card's left edge and a soft tint. Leave it white for a plain card |
 | **Description** | A short note shown on the card |
 | **Sort Order (lower first)** | Position of the card within its group. 1 comes before 2, and so on |
 | **Include in 'Launch Selected' by default** | Tick this for programs that should be ticked every time you open the launcher |
@@ -77,7 +77,9 @@ your cards appear on the main screen.
   ticked. The programs start one after another, about a second apart, in the
   order they appear on screen.
   - **All** ticks every card and **None** clears every tick.
-  - Ticks are for the current session. Click **🔄** (reload), or save in
+  - A ticked card gets an orange outline.
+  - Ticks are for the current session. Click the **reload button** (the
+    circular arrow next to the gear), or save in
     Manager, and the ticks go back to whatever you set with *Include in
     'Launch Selected' by default*.
 - If a program cannot be started — for example the file was moved, or a
@@ -87,10 +89,10 @@ your cards appear on the main screen.
 ## What is on a card
 
 - The program's icon, its name, and the sub group
-- The date and time the program file was last changed (green). Double-click
-  it to open the folder that contains the program.
+- The date and time the program file was last changed ("Modified ...").
+  Double-click it to open the folder that contains the program.
 - The category and description
-- A tick box, a **Launch** button and a **⚙** button for that program
+- A tick box, a **Launch** button and a small gear button for that program
 
 Cards for programs on a network share appear straight away; their icon and
 date fill in a moment later. If the network drive is switched off, the card
@@ -116,8 +118,8 @@ same drives.)
 |---|---|
 | A card says the program was not found | The program file was moved or deleted, or the network drive is not connected. Open Manager, select the program and check the **Executable Path** |
 | The Manager will not open and shows an error about `apps.json` | The configuration file has been damaged, usually by a manual edit. Fix the text it mentions, or delete the file — you can then add your programs again |
-| My cards do not show an icon or a date | The program's file cannot be reached (yet). Wait a few seconds, or click **🔄** |
-| I changed something outside the launcher and it is not showing | Click **🔄** to reload |
+| My cards do not show an icon or a date | The program's file cannot be reached (yet). Wait a few seconds, or click the reload button |
+| I changed something outside the launcher and it is not showing | Click the reload button to reload |
 
 ## Getting help
 

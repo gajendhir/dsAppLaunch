@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/logo.png" alt="dsAppLaunch" width="48" />
+  <img src="Assets/dslogo.png" alt="Data Spec" width="96" />
 </p>
 
 <h1 align="center">dsAppLaunch</h1>
@@ -20,19 +20,21 @@ launcher.
 
 ## Features
 
-- Card grid with icon, name, sub group, file date, category and description
+- A clean, modern card grid with icon, name, sub group, file date, category
+  and description
 - Groups with headings, plus a per-app **Sort Order** within each group
 - **Launch Selected** — tick cards and start them one after another, in
   on-screen order, with a single summary of anything that could not start
 - Built-in settings dialog: add, remove and edit entries, pick files with
   Browse, or drag and drop files onto the list
-- Custom card colours and optional custom icons
+- Colour-code cards with a stripe and soft tint, and use custom icons
+  if you like
 - Non-blocking startup: file checks and icon loading run in the background
 - Plain JSON configuration, stored per user — no database, no services
 
 ## Requirements
 
-- Windows 10 or 11 (x64)
+- Windows 10 (version 1607 or later) or Windows 11, x64
 - The installer is self-contained — no separate .NET install needed.
   Building from source instead requires the .NET 10 SDK.
 
@@ -43,7 +45,7 @@ launcher.
    run it — or build from source (see the
    [Programmer Reference](docs/programmerreference.md#build--run)).
 2. Start **Data Spec Application Launcher** from the Start menu or desktop.
-3. Click the **⚙** button and add your applications.
+3. Click the gear button (⚙) and add your applications.
 4. Click **Save & Apply Changes**. Your cards appear on the main screen.
 
 For a full walkthrough written for non-technical users — no coding

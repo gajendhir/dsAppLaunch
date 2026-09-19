@@ -21,6 +21,7 @@ no database, no server component and no network access of its own.
 | Language | VB.NET, `Option Strict On` |
 | Configuration | `apps.json`, serialized with `System.Text.Json` |
 | Config location | `%AppData%\Data Spec\dsAppLaunch\apps.json` |
+| Look and feel | Custom-painted cards, palette and button styles in `Theme.vb`; Segoe UI plus Segoe MDL2 Assets glyphs; per-monitor DPI (PerMonitorV2) |
 | Installer | WiX Toolset v6 (`Installer/`), per-machine MSI |
 | Third-party packages | None — the application uses only the .NET base class library and WinForms |
 
@@ -49,7 +50,7 @@ copy [apps.sample.json](../apps.sample.json) to
 The assembly `Version` is computed at build time as
 `Major.Minor.<days since 2000-01-01>.<seconds since midnight / 2>` (see the
 `PropertyGroup` in `dsAppLaunch.vbproj`); bump `MajorVersion` /
-`MinorVersion` by hand. The MSI carries its own three-part version in
+`MinorVersion` by hand (currently 2.4). The MSI carries its own three-part version in
 `Installer/Package.wxs` because Windows Installer ignores the fourth field
 when deciding whether a package is newer.
 
@@ -60,7 +61,8 @@ dsAppLaunch.vbproj        project file (WinForms, net10.0-windows8.0)
 dsAppLaunch.slnx          single-project solution
 My Project/               Application.myapp (startup form), generated designer file
 frmMain.vb / .Designer.vb   main window: card grid, toolbar, Launch Selected
-AppCard.vb / .Designer.vb   UserControl for one card
+AppCard.vb / .Designer.vb   UserControl for one card (custom-painted)
+Theme.vb                  palette, fonts, logo/icon loading, rounded drawing, button styles
 frmSettings.vb / .Designer.vb   modal editor for the app list
 AppConfig.vb              one configured application (JSON record)
 AppRepository.vb          the only code that reads/writes apps.json
@@ -70,7 +72,9 @@ IconProvider.vb           icon resolution and caching
 AppGrouping.vb            grouping and ordering rules (pure logic)
 SelectionState.vb         session-only set of ticked cards
 apps.sample.json          example configuration
-Installer/                WiX v6 project for the MSI
+Assets/dslogo.png         Data Spec logo (embedded resource)
+DataSpec.ico              application/installer icon, 16-256 px (also embedded)
+Installer/                WiX v6 project for the MSI (Package.wxs, licence, banner and dialog bitmaps)
 docs/                     this documentation
 ```
 
@@ -91,7 +95,8 @@ unit test if a test project is added.
 | Type | Responsibility |
 |---|---|
 | `frmMain` | Fills a `FlowLayoutPanel` with one `AppCard` per app; handles reload, settings, All/None, Launch Selected |
-| `AppCard` | One card. `Bind(probe)` fills it from an `AppProbe`; raises `LaunchRequested`, `SettingsRequested`, `SelectionChanged`; `SetBusy` shows the starting state |
+| `AppCard` | One card, painted in `OnPaint` (rounded surface, shadow, accent stripe, hover/selected/busy states). `Bind(probe)` fills it from an `AppProbe`; raises `LaunchRequested`, `SettingsRequested`, `SelectionChanged`; `SetBusy` shows the starting state |
+| `Theme` | Palette, font names, glyph codes, logo/icon loading, `RoundedRect`, `Blend`, `Scale`, and the `StylePrimary` / `StyleGhost` / `StyleIcon` / `StyleAccentOutline` button looks |
 | `frmSettings` | Modal editor. Owns its own in-memory `BindingList(Of AppConfig)`; drag and drop adds entries or sets exe/icon paths |
 | `AppConfig` | POCO serialized directly by `System.Text.Json` |
 | `AppRepository` | `Load`, `Save`, `EnsureExists`; one cached serializer options set |
@@ -140,6 +145,36 @@ The two forms share no in-memory model: the settings dialog does its own
 load/save against the file and the main window reloads from disk when it
 closes. That is adequate for a single-window modal flow; a non-modal or
 multi-window design would need a shared model or a file watcher.
+
+## Look and feel
+
+The visual style is deliberately small and lives in one place, `Theme.vb`.
+
+- **Palette.** Neutral greys for surfaces and text, and one accent taken from
+  the Data Spec logo (orange, `Accent`). Button fills use a slightly darker
+  orange than the logo's `#EB3D00` so white text reaches 4.5:1 contrast. The
+  logo's yellow is too pale for text or fills on white, so it is used only for
+  thin accents (`AccentYellow`) and the card's busy tint.
+- **Type and icons.** Segoe UI, with `Segoe UI Semibold` for headings. Toolbar
+  and card icons are Segoe MDL2 Assets glyphs (Windows 10 1607 or later)
+  rather than emoji, which render inconsistently in WinForms.
+- **Designer versus code.** Layout, sizes, fonts and static colours stay in the
+  `*.Designer.vb` files. Interactive looks that the designer cannot express
+  (hover, pressed, disabled) are applied from the constructors through
+  `Theme.StyleXxx`. Glyph text is also assigned in code.
+- **Cards** are custom-painted on a double-buffered control with transparent
+  child controls. The shadow is a few translucent rounded rectangles stacked
+  downwards. The card's `CardColor` is drawn as a 4 px left stripe and a 40 %
+  tint of that colour; white means "no colour coding" and gives a plain card.
+  A ticked card gets a 2 px accent border.
+- **DPI.** The app opts in to PerMonitorV2 in `ApplicationEvents.vb`. Cards use
+  `AutoScaleMode.Dpi`, and all custom painting goes through `Theme.Scale`. The
+  logo is drawn with high-quality resampling at whatever size is needed, so it
+  stays sharp at any scale.
+- **GDI handles.** Painting creates pens, brushes and paths inside `Using`
+  blocks; the logo and window icon are loaded once and shared. Check for leaks
+  after changing painting code by comparing `GetGuiResources` GDI/USER counts
+  before and after a few dozen reloads.
 
 ## Configuration file
 
@@ -219,8 +254,12 @@ deleted once no old configuration files remain.
   controls created at runtime.
 - **Errors** from file I/O and process launch are caught at the UI boundary
   and shown with `MessageBox`; there is no logging framework.
-- **Colours** are hex strings converted with `ColorTranslator`, always inside
-  `Try/Catch` with a default fallback, because the file can be hand-edited.
+- **Colours** stored in the file are hex strings converted with
+  `ColorTranslator`, always inside `Try/Catch` with a default fallback, because
+  the file can be hand-edited. Colours used by the application itself come from
+  `Theme`, not from literals in forms.
+- **Colour arithmetic on `Color` channels** must widen the `Byte` values first
+  (`CInt`); `Byte - Byte` overflows when the result is negative.
 - **Configuration compatibility:** new `AppConfig` fields need safe defaults;
   renamed fields need a legacy-key alias.
 
@@ -229,6 +268,7 @@ deleted once no old configuration files remain.
 - **New card field:** add the property to `AppConfig` (with a default), a
   control in `frmSettings.Designer.vb` plus load/save handling in
   `frmSettings.vb`, and display it in `AppCard`.
+- **Restyling:** change the palette or fonts in `Theme.vb`. The designer files repeat a few of the same values as static colours, so search for the old value when changing the palette.
 - **Different ordering or grouping:** edit `AppGrouping.vb`; both the card
   grid and Launch Selected use its result.
 - **Different config location:** change `AppRepository.FilePath`; nothing else
@@ -239,8 +279,9 @@ deleted once no old configuration files remain.
 The installer is a [WiX Toolset v6](https://wixtoolset.org/) project in
 `Installer/`. It installs a self-contained x64 build (no .NET runtime
 required on the target machine) to `Program Files\Data Spec Application
-Launcher`, adds Start menu and desktop shortcuts, shows the licence, and uses
-`MajorUpgrade` so a newer MSI replaces an older one. User configuration in
+Launcher`, adds Start menu and desktop shortcuts, shows the licence with the Data
+Spec logo on the banner and welcome images (`Banner.bmp` 493x58, `Dialog.bmp`
+493x312), and uses `MajorUpgrade` so a newer MSI replaces an older one. User configuration in
 `%AppData%` is never touched by install, upgrade or uninstall.
 
 Prerequisites: .NET 10 SDK and the WiX CLI
