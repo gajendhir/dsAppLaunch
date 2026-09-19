@@ -9,8 +9,8 @@ Public Class frmSettings
     Private txtIconPath As TextBox
     Private txtCategory As TextBox
     Private txtDescription As TextBox
-    Private txtFirmName As TextBox
-    Private txtFinancialYear As TextBox
+    Private txtGroup As TextBox
+    Private txtSubGroup As TextBox
     Private pnlColorPreview As Panel
 
     Private btnBrowseExe As Button
@@ -102,15 +102,15 @@ Public Class frmSettings
         Me.Controls.Add(btnBrowseIcon)
         toolTip.SetToolTip(btnBrowseIcon, "Browse for a custom icon image")
 
-        Me.Controls.Add(New Label With {.Text = "Group By (Optional):", .Location = New Point(startX, 165), .AutoSize = True})
-        txtFirmName = New TextBox With {.Location = New Point(startX, 185), .Size = New Size(200, 25)}
-        AddHandler txtFirmName.TextChanged, AddressOf UpdateCurrentModel
-        Me.Controls.Add(txtFirmName)
+        Me.Controls.Add(New Label With {.Text = "Group (Optional):", .Location = New Point(startX, 165), .AutoSize = True})
+        txtGroup = New TextBox With {.Location = New Point(startX, 185), .Size = New Size(200, 25)}
+        AddHandler txtGroup.TextChanged, AddressOf UpdateCurrentModel
+        Me.Controls.Add(txtGroup)
 
-        Me.Controls.Add(New Label With {.Text = "Sub Title (Optional):", .Location = New Point(startX + 210, 165), .AutoSize = True})
-        txtFinancialYear = New TextBox With {.Location = New Point(startX + 210, 185), .Size = New Size(190, 25)}
-        AddHandler txtFinancialYear.TextChanged, AddressOf UpdateCurrentModel
-        Me.Controls.Add(txtFinancialYear)
+        Me.Controls.Add(New Label With {.Text = "Sub Group (Optional):", .Location = New Point(startX + 210, 165), .AutoSize = True})
+        txtSubGroup = New TextBox With {.Location = New Point(startX + 210, 185), .Size = New Size(190, 25)}
+        AddHandler txtSubGroup.TextChanged, AddressOf UpdateCurrentModel
+        Me.Controls.Add(txtSubGroup)
 
         Me.Controls.Add(New Label With {.Text = "Category:", .Location = New Point(startX, 215), .AutoSize = True})
         txtCategory = New TextBox With {.Location = New Point(startX, 235), .Size = New Size(200, 25)}
@@ -193,8 +193,8 @@ Public Class frmSettings
         txtName.Text = selectedApp.Name
         txtExePath.Text = selectedApp.ExecutablePath
         txtIconPath.Text = selectedApp.IconPath
-        txtFirmName.Text = selectedApp.FirmName
-        txtFinancialYear.Text = selectedApp.FinancialYear
+        txtGroup.Text = selectedApp.Group
+        txtSubGroup.Text = selectedApp.SubGroup
         txtCategory.Text = selectedApp.Category
         txtDescription.Text = selectedApp.Description
 
@@ -218,8 +218,8 @@ Public Class frmSettings
         selectedApp.Name = txtName.Text
         selectedApp.ExecutablePath = txtExePath.Text
         selectedApp.IconPath = txtIconPath.Text
-        selectedApp.FirmName = txtFirmName.Text
-        selectedApp.FinancialYear = txtFinancialYear.Text
+        selectedApp.Group = txtGroup.Text
+        selectedApp.SubGroup = txtSubGroup.Text
         selectedApp.Category = txtCategory.Text
         selectedApp.Description = txtDescription.Text
         selectedApp.CardColor = ColorTranslator.ToHtml(pnlColorPreview.BackColor)
@@ -371,8 +371,8 @@ Public Class frmSettings
         txtName.Clear()
         txtExePath.Clear()
         txtIconPath.Clear()
-        txtFirmName.Clear()
-        txtFinancialYear.Clear()
+        txtGroup.Clear()
+        txtSubGroup.Clear()
         txtCategory.Clear()
         txtDescription.Clear()
         pnlColorPreview.BackColor = Color.White

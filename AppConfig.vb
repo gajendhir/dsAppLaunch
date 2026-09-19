@@ -10,9 +10,25 @@ Public Class AppConfig
     Public Property Description As String = ""
 
     ' Extra Optional Fields
-    Public Property FirmName As String = ""
-    Public Property FinancialYear As String = ""
+    Public Property [Group] As String = ""
+    Public Property SubGroup As String = ""
     Public Property CardColor As String = "#FFFFFF" ' Hex Color Representation
+
+    ' Legacy keys (FirmName / FinancialYear): read-only aliases so older apps.json files still
+    ' load. Set-only, so they are never serialized and the next save writes the new keys.
+    <JsonPropertyName("FirmName")>
+    Public WriteOnly Property LegacyFirmName As String
+        Set(value As String)
+            If String.IsNullOrEmpty([Group]) Then [Group] = value
+        End Set
+    End Property
+
+    <JsonPropertyName("FinancialYear")>
+    Public WriteOnly Property LegacyFinancialYear As String
+        Set(value As String)
+            If String.IsNullOrEmpty(SubGroup) Then SubGroup = value
+        End Set
+    End Property
 
     Public Shared Function Create(name As String, executablePath As String) As AppConfig
         Return New AppConfig With {

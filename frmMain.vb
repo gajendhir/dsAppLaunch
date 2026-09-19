@@ -147,10 +147,10 @@ Public Class frmMain
 
             Dim headerWidth As Integer = Math.Max(200, flowLayout.ClientSize.Width - 35)
 
-            For Each firmGroup In AppGrouping.GroupAndSort(appsList)
+            For Each appGroup In AppGrouping.GroupAndSort(appsList)
                 ' Group Header Label
-                Dim lblFirmHeader As New Label With {
-                    .Text = firmGroup.Title,
+                Dim lblGroupHeader As New Label With {
+                    .Text = appGroup.Title,
                     .Font = New Font("Segoe UI", 12, FontStyle.Bold),
                     .ForeColor = Color.FromArgb(41, 128, 185),
                     .Size = New Size(headerWidth, 24),
@@ -159,10 +159,10 @@ Public Class frmMain
                     .AutoEllipsis = True,
                     .Tag = "HeaderLabel"
                 }
-                flowLayout.Controls.Add(lblFirmHeader)
-                flowLayout.SetFlowBreak(lblFirmHeader, True)
+                flowLayout.Controls.Add(lblGroupHeader)
+                flowLayout.SetFlowBreak(lblGroupHeader, True)
 
-                For Each app In firmGroup.Apps
+                For Each app In appGroup.Apps
                     Dim card As Panel = CreateAppCard(app)
                     flowLayout.Controls.Add(card)
                 Next
@@ -216,12 +216,12 @@ Public Class frmMain
 
         Dim nextTop As Integer = 25
 
-        ' 1. Financial Year Label
-        Dim hasFy As Boolean = Not String.IsNullOrWhiteSpace(app.FinancialYear)
-        Dim lblFinancialYear As Label = Nothing
-        If hasFy Then
-            lblFinancialYear = New Label With {
-                .Text = app.FinancialYear,
+        ' 1. Sub Group Label
+        Dim hasSub As Boolean = Not String.IsNullOrWhiteSpace(app.SubGroup)
+        Dim lblSubGroup As Label = Nothing
+        If hasSub Then
+            lblSubGroup = New Label With {
+                .Text = app.SubGroup,
                 .Font = New Font(FontName, FontSize * 1.1F, FontStyle.Italic),
                 .ForeColor = Color.FromArgb(127, 140, 141),
                 .Location = New Point(48, nextTop),
@@ -298,7 +298,7 @@ Public Class frmMain
         ' Add controls to card
         card.Controls.Add(picIcon)
         card.Controls.Add(lblName)
-        If hasFy Then card.Controls.Add(lblFinancialYear)
+        If hasSub Then card.Controls.Add(lblSubGroup)
         If hasExeDate Then card.Controls.Add(lblDate)
         card.Controls.Add(lblDesc)
         card.Controls.Add(btnLaunchCard)

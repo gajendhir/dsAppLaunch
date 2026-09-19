@@ -13,14 +13,14 @@ End Class
 Public Class AppGrouping
     Public Const UngroupedTitle As String = "(Ungrouped)"
 
-    ''' <summary>Groups by FirmName; within a group orders by FinancialYear descending. This is the on-screen order.</summary>
+    ''' <summary>Groups by Group; within a group orders by SubGroup descending. This is the on-screen order.</summary>
     Public Shared Function GroupAndSort(apps As IEnumerable(Of AppConfig)) As List(Of AppGroup)
         Return apps.
-            GroupBy(Function(x) If(String.IsNullOrWhiteSpace(x.FirmName), "", x.FirmName)).
+            GroupBy(Function(x) If(String.IsNullOrWhiteSpace(x.Group), "", x.Group)).
             Select(Function(g) New AppGroup(
                 g.Key,
                 If(g.Key.Length = 0, UngroupedTitle, g.Key),
-                g.OrderByDescending(Function(x) If(String.IsNullOrWhiteSpace(x.FinancialYear), "", x.FinancialYear)).ToList())).
+                g.OrderByDescending(Function(x) If(String.IsNullOrWhiteSpace(x.SubGroup), "", x.SubGroup)).ToList())).
             ToList()
     End Function
 End Class
