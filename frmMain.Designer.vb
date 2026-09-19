@@ -26,6 +26,9 @@ Partial Class frmMain
         topPanel = New Panel()
         btnReload = New Button()
         btnSettings = New Button()
+        btnSelectAll = New Button()
+        btnSelectNone = New Button()
+        btnLaunchSelected = New Button()
         lblHeaderTitle = New Label()
         bottomPanel = New Panel()
         lblSupportFooter = New LinkLabel()
@@ -40,6 +43,9 @@ Partial Class frmMain
         topPanel.BackColor = Color.FromArgb(CByte(28), CByte(40), CByte(51))
         topPanel.Controls.Add(btnReload)
         topPanel.Controls.Add(btnSettings)
+        topPanel.Controls.Add(btnSelectAll)
+        topPanel.Controls.Add(btnSelectNone)
+        topPanel.Controls.Add(btnLaunchSelected)
         topPanel.Controls.Add(lblHeaderTitle)
         topPanel.Dock = DockStyle.Top
         topPanel.Location = New Point(0, 0)
@@ -79,6 +85,51 @@ Partial Class frmMain
         btnSettings.Text = "⚙️"
         toolTip.SetToolTip(btnSettings, "Open settings to manage applications")
         btnSettings.UseVisualStyleBackColor = False
+        '
+        ' btnSelectAll
+        '
+        btnSelectAll.BackColor = Color.Transparent
+        btnSelectAll.Cursor = Cursors.Hand
+        btnSelectAll.FlatStyle = FlatStyle.Flat
+        btnSelectAll.ForeColor = Color.White
+        btnSelectAll.Location = New Point(10, 37)
+        btnSelectAll.Name = "btnSelectAll"
+        btnSelectAll.Size = New Size(40, 30)
+        btnSelectAll.TabIndex = 3
+        btnSelectAll.Text = "All"
+        toolTip.SetToolTip(btnSelectAll, "Tick every application for Launch Selected")
+        btnSelectAll.UseVisualStyleBackColor = False
+        '
+        ' btnSelectNone
+        '
+        btnSelectNone.BackColor = Color.Transparent
+        btnSelectNone.Cursor = Cursors.Hand
+        btnSelectNone.FlatStyle = FlatStyle.Flat
+        btnSelectNone.ForeColor = Color.White
+        btnSelectNone.Location = New Point(55, 37)
+        btnSelectNone.Name = "btnSelectNone"
+        btnSelectNone.Size = New Size(50, 30)
+        btnSelectNone.TabIndex = 4
+        btnSelectNone.Text = "None"
+        toolTip.SetToolTip(btnSelectNone, "Untick every application")
+        btnSelectNone.UseVisualStyleBackColor = False
+        '
+        ' btnLaunchSelected
+        '
+        btnLaunchSelected.BackColor = Color.FromArgb(CByte(46), CByte(204), CByte(113))
+        btnLaunchSelected.Cursor = Cursors.Hand
+        btnLaunchSelected.Enabled = False
+        btnLaunchSelected.FlatAppearance.BorderSize = 0
+        btnLaunchSelected.FlatStyle = FlatStyle.Flat
+        btnLaunchSelected.Font = New Font("Segoe UI", 9.9F)
+        btnLaunchSelected.ForeColor = Color.White
+        btnLaunchSelected.Location = New Point(110, 37)
+        btnLaunchSelected.Name = "btnLaunchSelected"
+        btnLaunchSelected.Size = New Size(185, 30)
+        btnLaunchSelected.TabIndex = 5
+        btnLaunchSelected.Text = "▶ Launch Selected (0)"
+        toolTip.SetToolTip(btnLaunchSelected, "Launch all ticked applications, one after another, in on-screen order")
+        btnLaunchSelected.UseVisualStyleBackColor = False
         '
         ' lblHeaderTitle
         '
@@ -156,6 +207,9 @@ Partial Class frmMain
     Friend WithEvents topPanel As Panel
     Friend WithEvents btnReload As Button
     Friend WithEvents btnSettings As Button
+    Friend WithEvents btnSelectAll As Button
+    Friend WithEvents btnSelectNone As Button
+    Friend WithEvents btnLaunchSelected As Button
     Friend WithEvents lblHeaderTitle As Label
     Friend WithEvents bottomPanel As Panel
     Friend WithEvents lblSupportFooter As LinkLabel

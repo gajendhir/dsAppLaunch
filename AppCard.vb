@@ -3,11 +3,26 @@ Imports System.IO
 Public Class AppCard
     Public Event LaunchRequested(card As AppCard)
     Public Event SettingsRequested(card As AppCard)
+    Public Event SelectionChanged(card As AppCard)
 
     Private idleColor As Color
+    Private suppressSelectionEvent As Boolean
 
     <System.ComponentModel.Browsable(False), System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)>
     Public Property App As AppConfig
+
+    ''' <summary>The "Launch Selected" tick. Setting it programmatically does not raise SelectionChanged.</summary>
+    <System.ComponentModel.Browsable(False), System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)>
+    Public Property IsSelected As Boolean
+        Get
+            Return chkSelect.Checked
+        End Get
+        Set(value As Boolean)
+            suppressSelectionEvent = True
+            chkSelect.Checked = value
+            suppressSelectionEvent = False
+        End Set
+    End Property
 
     ''' <summary>Fills the card from an already-gathered probe, so no file system access happens on the UI thread.</summary>
     Public Sub Bind(probe As AppProbe)
@@ -73,6 +88,10 @@ Public Class AppCard
 
     Private Sub btnLaunch_Click(sender As Object, e As EventArgs) Handles btnLaunch.Click
         RaiseEvent LaunchRequested(Me)
+    End Sub
+
+    Private Sub chkSelect_CheckedChanged(sender As Object, e As EventArgs) Handles chkSelect.CheckedChanged
+        If Not suppressSelectionEvent Then RaiseEvent SelectionChanged(Me)
     End Sub
 
     Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles btnSettings.Click

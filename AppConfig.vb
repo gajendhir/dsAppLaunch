@@ -14,6 +14,11 @@ Public Class AppConfig
     Public Property SubGroup As String = ""
     Public Property CardColor As String = "#FFFFFF" ' Hex Color Representation
 
+    ' Position within its group on the main screen (lower first); ties fall back to SubGroup order.
+    Public Property SortOrder As Integer = 0
+    ' Persistent default for the main screen's "Launch Selected" ticks (ticks there are per-session).
+    Public Property Selected As Boolean = False
+
     ' Legacy keys (FirmName / FinancialYear): read-only aliases so older apps.json files still
     ' load. Set-only, so they are never serialized and the next save writes the new keys.
     <JsonPropertyName("FirmName")>

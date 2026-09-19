@@ -30,6 +30,7 @@ Partial Class AppCard
         lblDesc = New Label()
         btnSettings = New Button()
         btnLaunch = New Button()
+        chkSelect = New CheckBox()
         toolTip = New ToolTip(components)
         CType(picIcon, System.ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
@@ -112,6 +113,16 @@ Partial Class AppCard
         btnLaunch.Text = "▶ Launch"
         btnLaunch.UseVisualStyleBackColor = False
         '
+        ' chkSelect
+        '
+        chkSelect.Cursor = Cursors.Hand
+        chkSelect.Location = New Point(199, 4)
+        chkSelect.Name = "chkSelect"
+        chkSelect.Size = New Size(20, 20)
+        chkSelect.TabIndex = 7
+        toolTip.SetToolTip(chkSelect, "Include in Launch Selected (this session only)")
+        chkSelect.UseVisualStyleBackColor = True
+        '
         ' toolTip
         '
         toolTip.AutoPopDelay = 5000
@@ -129,6 +140,7 @@ Partial Class AppCard
         Controls.Add(lblDesc)
         Controls.Add(btnLaunch)
         Controls.Add(btnSettings)
+        Controls.Add(chkSelect)
         Margin = New Padding(8)
         Name = "AppCard"
         Size = New Size(225, 125)
@@ -143,5 +155,6 @@ Partial Class AppCard
     Friend WithEvents lblDesc As Label
     Friend WithEvents btnSettings As Button
     Friend WithEvents btnLaunch As Button
+    Friend WithEvents chkSelect As CheckBox
     Friend WithEvents toolTip As ToolTip
 End Class

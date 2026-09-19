@@ -46,9 +46,13 @@ Partial Class frmSettings
         btnPickColor = New Button()
         lblDescription = New Label()
         txtDescription = New TextBox()
+        lblSortOrder = New Label()
+        nudSortOrder = New NumericUpDown()
+        chkSelected = New CheckBox()
         btnSave = New Button()
         lblFooterSupport = New Label()
         toolTip = New ToolTip(components)
+        CType(nudSortOrder, System.ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         '
         ' lblApps
@@ -263,6 +267,36 @@ Partial Class frmSettings
         txtDescription.Size = New Size(400, 60)
         txtDescription.TabIndex = 22
         '
+        ' lblSortOrder
+        '
+        lblSortOrder.AutoSize = True
+        lblSortOrder.Location = New Point(240, 355)
+        lblSortOrder.Name = "lblSortOrder"
+        lblSortOrder.Size = New Size(130, 15)
+        lblSortOrder.TabIndex = 23
+        lblSortOrder.Text = "Sort Order (lower first):"
+        '
+        ' nudSortOrder
+        '
+        nudSortOrder.Location = New Point(240, 375)
+        nudSortOrder.Maximum = New Decimal(New Integer() {99999, 0, 0, 0})
+        nudSortOrder.Minimum = New Decimal(New Integer() {99999, 0, 0, Integer.MinValue})
+        nudSortOrder.Name = "nudSortOrder"
+        nudSortOrder.Size = New Size(80, 23)
+        nudSortOrder.TabIndex = 24
+        toolTip.SetToolTip(nudSortOrder, "Position of this card within its group on the main screen. Equal values fall back to Sub Group order.")
+        '
+        ' chkSelected
+        '
+        chkSelected.AutoSize = True
+        chkSelected.Location = New Point(340, 377)
+        chkSelected.Name = "chkSelected"
+        chkSelected.Size = New Size(252, 19)
+        chkSelected.TabIndex = 25
+        chkSelected.Text = "Include in 'Launch Selected' by default"
+        toolTip.SetToolTip(chkSelected, "Saved default. On the main screen the tick can be changed for the current session without saving.")
+        chkSelected.UseVisualStyleBackColor = True
+        '
         ' btnSave
         '
         btnSave.BackColor = Color.FromArgb(CByte(46), CByte(204), CByte(113))
@@ -272,7 +306,7 @@ Partial Class frmSettings
         btnSave.Location = New Point(420, 440)
         btnSave.Name = "btnSave"
         btnSave.Size = New Size(220, 35)
-        btnSave.TabIndex = 23
+        btnSave.TabIndex = 26
         btnSave.Text = "💾 Save & Apply Changes"
         toolTip.SetToolTip(btnSave, "Save changes to apps.json")
         btnSave.UseVisualStyleBackColor = False
@@ -284,7 +318,7 @@ Partial Class frmSettings
         lblFooterSupport.Location = New Point(0, 495)
         lblFooterSupport.Name = "lblFooterSupport"
         lblFooterSupport.Size = New Size(705, 20)
-        lblFooterSupport.TabIndex = 24
+        lblFooterSupport.TabIndex = 27
         lblFooterSupport.Text = "S/W Support By Data Spec"
         lblFooterSupport.TextAlign = ContentAlignment.MiddleRight
         '
@@ -323,6 +357,9 @@ Partial Class frmSettings
         Controls.Add(btnPickColor)
         Controls.Add(lblDescription)
         Controls.Add(txtDescription)
+        Controls.Add(lblSortOrder)
+        Controls.Add(nudSortOrder)
+        Controls.Add(chkSelected)
         Controls.Add(btnSave)
         Controls.Add(lblFooterSupport)
         FormBorderStyle = FormBorderStyle.FixedDialog
@@ -331,6 +368,7 @@ Partial Class frmSettings
         Name = "frmSettings"
         StartPosition = FormStartPosition.CenterParent
         Text = "Data Spec Application Launcher - Manager"
+        CType(nudSortOrder, System.ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
         PerformLayout()
     End Sub
@@ -358,6 +396,9 @@ Partial Class frmSettings
     Friend WithEvents btnPickColor As Button
     Friend WithEvents lblDescription As Label
     Friend WithEvents txtDescription As TextBox
+    Friend WithEvents lblSortOrder As Label
+    Friend WithEvents nudSortOrder As NumericUpDown
+    Friend WithEvents chkSelected As CheckBox
     Friend WithEvents btnSave As Button
     Friend WithEvents lblFooterSupport As Label
     Friend WithEvents toolTip As ToolTip

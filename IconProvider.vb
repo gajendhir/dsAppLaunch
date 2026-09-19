@@ -2,19 +2,11 @@ Imports System.Collections.Concurrent
 Imports System.IO
 
 Public Class IconProvider
-    Private Class CacheEntry
-        Public ReadOnly Stamp As Long
-        Public ReadOnly Image As Image
-
-        Public Sub New(stamp As Long, image As Image)
-            Me.Stamp = stamp
-            Me.Image = image
-        End Sub
-    End Class
-
-    ' Images are shared between cards for the life of the app and are never disposed; entries are
-    ' revalidated by file timestamp so an updated exe/icon is picked up on the next reload.
-    Private Shared ReadOnly Cache As New ConcurrentDictionary(Of String, CacheEntry)(StringComparer.OrdinalIgnoreCase)
+    ' Images are shared between cards for the life of the app and are never disposed. The key includes the
+    ' file timestamp, so an updated exe/icon is reloaded. Lazy makes concurrent probes of the same file
+    ' (several entries pointing at one exe) share a single extraction; extracting one file's icon from several
+    ' threads at once was observed to return the generic document icon.
+    Private Shared ReadOnly Cache As New ConcurrentDictionary(Of String, Lazy(Of Image))(StringComparer.OrdinalIgnoreCase)
     Private Shared ReadOnly FallbackIcon As Image = SystemIcons.Application.ToBitmap()
 
     Public Shared ReadOnly Property Fallback As Image
@@ -42,11 +34,13 @@ Public Class IconProvider
     End Function
 
     Private Shared Function Cached(key As String, stamp As Long, load As Func(Of Image)) As Image
-        Dim entry As CacheEntry = Nothing
-        If Cache.TryGetValue(key, entry) AndAlso entry.Stamp = stamp Then Return entry.Image
-
-        Dim img As Image = load()
-        If img IsNot Nothing Then Cache(key) = New CacheEntry(stamp, img)
+        Dim fullKey As String = key & "|" & stamp
+        Dim img As Image = Cache.GetOrAdd(fullKey, Function(k) New Lazy(Of Image)(load, System.Threading.LazyThreadSafetyMode.ExecutionAndPublication)).Value
+        ' Don't remember failures: retry on the next reload (e.g. a share that was briefly unavailable).
+        If img Is Nothing Then
+            Dim removed As Lazy(Of Image) = Nothing
+            Cache.TryRemove(fullKey, removed)
+        End If
         Return img
     End Function
 

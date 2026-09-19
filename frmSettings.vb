@@ -64,6 +64,8 @@ Public Class frmSettings
         txtSubGroup.Text = selectedApp.SubGroup
         txtCategory.Text = selectedApp.Category
         txtDescription.Text = selectedApp.Description
+        nudSortOrder.Value = Math.Clamp(CDec(selectedApp.SortOrder), nudSortOrder.Minimum, nudSortOrder.Maximum)
+        chkSelected.Checked = selectedApp.Selected
 
         Try
             pnlColorPreview.BackColor = ColorTranslator.FromHtml(selectedApp.CardColor)
@@ -78,7 +80,7 @@ Public Class frmSettings
         PopulateFields(CType(lstApps.SelectedItem, AppConfig))
     End Sub
 
-    Private Sub UpdateCurrentModel(sender As Object, e As EventArgs) Handles txtName.TextChanged, txtExePath.TextChanged, txtIconPath.TextChanged, txtGroup.TextChanged, txtSubGroup.TextChanged, txtCategory.TextChanged, txtDescription.TextChanged
+    Private Sub UpdateCurrentModel(sender As Object, e As EventArgs) Handles txtName.TextChanged, txtExePath.TextChanged, txtIconPath.TextChanged, txtGroup.TextChanged, txtSubGroup.TextChanged, txtCategory.TextChanged, txtDescription.TextChanged, nudSortOrder.ValueChanged, chkSelected.CheckedChanged
         If isBinding OrElse lstApps.SelectedItem Is Nothing Then Return
 
         Dim selectedApp As AppConfig = CType(lstApps.SelectedItem, AppConfig)
@@ -89,6 +91,8 @@ Public Class frmSettings
         selectedApp.SubGroup = txtSubGroup.Text
         selectedApp.Category = txtCategory.Text
         selectedApp.Description = txtDescription.Text
+        selectedApp.SortOrder = CInt(nudSortOrder.Value)
+        selectedApp.Selected = chkSelected.Checked
         selectedApp.CardColor = ColorTranslator.ToHtml(pnlColorPreview.BackColor)
 
         isBinding = True
@@ -220,6 +224,8 @@ Public Class frmSettings
         txtSubGroup.Clear()
         txtCategory.Clear()
         txtDescription.Clear()
+        nudSortOrder.Value = 0
+        chkSelected.Checked = False
         pnlColorPreview.BackColor = Color.White
         isBinding = False
     End Sub
