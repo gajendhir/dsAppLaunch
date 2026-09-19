@@ -6,7 +6,7 @@
         <StartupObject>Sub Main</StartupObject>
         <UseWindowsForms>true</UseWindowsForms>
         <MyType>WindowsForms</MyType>
-        <ApplicationIcon>FeathDS.ico</ApplicationIcon>
+        <ApplicationIcon>DataSpec.ico</ApplicationIcon>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -24,7 +24,7 @@
 
     <PropertyGroup>
         <MajorVersion>2</MajorVersion>
-        <MinorVersion>3</MinorVersion>
+        <MinorVersion>4</MinorVersion>
         <ProjectStartDate>2000-01-01</ProjectStartDate>
         <SecondsFromMidNight>$([MSBuild]::Divide($([System.DateTime]::Now.TimeOfDay.TotalSeconds), 2))</SecondsFromMidNight>
         <BuildNumber>$([System.DateTime]::Now.Subtract($([System.DateTime]::Parse($(ProjectStartDate)))).Days)</BuildNumber>
@@ -35,7 +35,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Include="FeathDS.ico" />
+        <EmbeddedResource Include="DataSpec.ico" LogicalName="DataSpec.ico" />
+        <EmbeddedResource Include="Assets\dslogo.png" LogicalName="dslogo.png" />
     </ItemGroup>
 
     <ItemGroup>

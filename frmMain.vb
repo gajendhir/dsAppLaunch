@@ -1,5 +1,5 @@
 Public Class frmMain
-    Private Shared ReadOnly HeaderFont As New Font("Segoe UI", 12, FontStyle.Bold)
+    Private Shared ReadOnly HeaderFont As New Font(Theme.UiSemibold, 10.5F)
 
     Private Const LaunchStaggerMs As Integer = 1000
 
@@ -12,9 +12,58 @@ Public Class frmMain
     Private cardByApp As New Dictionary(Of AppConfig, AppCard)()
     Private isLaunchingSelected As Boolean
 
+    Public Sub New()
+        InitializeComponent()
+        Icon = Theme.AppIcon()
+
+        ' Glyphs and interactive button looks live in code (see Theme): the designer can't express hover/disabled states.
+        Theme.StyleIcon(btnReload)
+        btnReload.Text = Theme.GlyphRefresh
+        Theme.StyleIcon(btnSettings)
+        btnSettings.Text = Theme.GlyphSettings
+        Theme.StylePrimary(btnLaunchSelected)
+        Theme.StyleGhost(btnSelectAll)
+        Theme.StyleGhost(btnSelectNone)
+    End Sub
+
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadApplications()
     End Sub
+
+    ' Header: logo, a hairline bottom border and a short yellow accent under the logo.
+    Private Sub topPanel_Paint(sender As Object, e As PaintEventArgs) Handles topPanel.Paint
+        Dim logoSize As Integer = Theme.Scale(topPanel, 44)
+        Dim left As Integer = Theme.Scale(topPanel, 18)
+        Theme.DrawLogo(e.Graphics, New Rectangle(left, Theme.Scale(topPanel, 14), logoSize, logoSize))
+        Using pen As New Pen(Theme.Border)
+            e.Graphics.DrawLine(pen, 0, topPanel.Height - 1, topPanel.Width, topPanel.Height - 1)
+        End Using
+        Using brush As New SolidBrush(Theme.AccentYellow)
+            e.Graphics.FillRectangle(brush, left, topPanel.Height - Theme.Scale(topPanel, 3), logoSize, Theme.Scale(topPanel, 3))
+        End Using
+    End Sub
+
+    Private Sub bottomPanel_Paint(sender As Object, e As PaintEventArgs) Handles bottomPanel.Paint
+        Using pen As New Pen(Theme.Border)
+            e.Graphics.DrawLine(pen, 0, 0, bottomPanel.Width, 0)
+        End Using
+    End Sub
+
+    ' Group heading: text with a hairline underneath and a short accent segment at its left end.
+    Private Sub GroupHeader_Paint(sender As Object, e As PaintEventArgs)
+        Dim header As Label = DirectCast(sender, Label)
+        Dim y As Integer = header.Height - 1
+        Using pen As New Pen(Theme.Border)
+            e.Graphics.DrawLine(pen, 0, y, header.Width, y)
+        End Using
+        Using brush As New SolidBrush(Theme.AccentYellow)
+            e.Graphics.FillRectangle(brush, 0, y - 1, Theme.Scale(header, 28), 2)
+        End Using
+    End Sub
+
+    Private Function GroupHeaderWidth() As Integer
+        Return Math.Max(200, flowLayout.ClientSize.Width - Theme.Scale(flowLayout, 42))
+    End Function
 
     Private Sub btnReload_Click(sender As Object, e As EventArgs) Handles btnReload.Click
         LoadApplications()
@@ -42,7 +91,7 @@ Public Class frmMain
         End If
 
         flowLayout.SuspendLayout()
-        Dim targetWidth As Integer = Math.Max(200, flowLayout.ClientSize.Width - 35)
+        Dim targetWidth As Integer = GroupHeaderWidth()
 
         For Each ctrl As Control In flowLayout.Controls
             If TypeOf ctrl Is Label AndAlso Equals(ctrl.Tag, "HeaderLabel") Then
@@ -82,20 +131,23 @@ Public Class frmMain
             Dim groups As List(Of AppGroup) = AppGrouping.GroupAndSort(apps)
             screenOrder = AppGrouping.ScreenOrder(groups)
             selection.ResetFrom(apps)
-            Dim headerWidth As Integer = Math.Max(200, flowLayout.ClientSize.Width - 35)
+            Dim headerWidth As Integer = GroupHeaderWidth()
 
             For Each appGroup In groups
                 ' Group Header Label
                 Dim lblGroupHeader As New Label With {
                     .Text = appGroup.Title,
                     .Font = HeaderFont,
-                    .ForeColor = Color.FromArgb(41, 128, 185),
-                    .Size = New Size(headerWidth, 24),
-                    .Margin = New Padding(5, 6, 5, 2),
+                    .ForeColor = Theme.TextPrimary,
+                    .Size = New Size(headerWidth, Theme.Scale(flowLayout, 30)),
+                    .Margin = New Padding(4, 10, 4, 6),
                     .AutoSize = False,
                     .AutoEllipsis = True,
+                    .TextAlign = ContentAlignment.BottomLeft,
+                    .Padding = New Padding(0, 0, 0, 5),
                     .Tag = "HeaderLabel"
                 }
+                AddHandler lblGroupHeader.Paint, AddressOf GroupHeader_Paint
                 flowLayout.Controls.Add(lblGroupHeader)
                 flowLayout.SetFlowBreak(lblGroupHeader, True)
 
@@ -119,7 +171,7 @@ Public Class frmMain
 
                 ' Break panel forces the next group section to start on a NEW line below cards
                 Dim breakPanel As New Panel With {
-                    .Size = New Size(headerWidth, 10),
+                    .Size = New Size(headerWidth, 6),
                     .Margin = New Padding(0),
                     .Tag = "BreakPanel"
                 }
@@ -170,7 +222,7 @@ Public Class frmMain
             Dim results As List(Of LaunchResult) = Await AppLauncher.LaunchManyAsync(toLaunch, LaunchStaggerMs,
                 Sub(index, total, result)
                     If IsDisposed Then Return
-                    btnLaunchSelected.Text = $"⏳ Launched {index}/{total}..."
+                    btnLaunchSelected.Text = $"Launched {index}/{total}..."
                     Dim card As AppCard = Nothing
                     If result.Status = LaunchStatus.Started AndAlso cardByApp.TryGetValue(result.App, card) Then ShowBusy(card)
                 End Sub)

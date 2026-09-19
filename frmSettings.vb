@@ -9,6 +9,45 @@ Public Class frmSettings
 
     Public Sub New()
         InitializeComponent()
+        Icon = Theme.AppIcon()
+
+        ' Interactive button looks live in code (see Theme): the designer can't express hover/disabled states.
+        Theme.StylePrimary(btnSave)
+        For Each b As Button In {btnAdd, btnRemove, btnBrowseExe, btnBrowseIcon, btnPickColor}
+            Theme.StyleGhost(b)
+        Next
+        btnRemove.ForeColor = Color.FromArgb(185, 28, 28)
+        lstApps.BackColor = Theme.Surface
+    End Sub
+
+    Private Sub pnlHeader_Paint(sender As Object, e As PaintEventArgs) Handles pnlHeader.Paint
+        Dim logoSize As Integer = Theme.Scale(pnlHeader, 38)
+        Dim left As Integer = Theme.Scale(pnlHeader, 18)
+        Theme.DrawLogo(e.Graphics, New Rectangle(left, Theme.Scale(pnlHeader, 12), logoSize, logoSize))
+        Using pen As New Pen(Theme.Border)
+            e.Graphics.DrawLine(pen, 0, pnlHeader.Height - 1, pnlHeader.Width, pnlHeader.Height - 1)
+        End Using
+        Using brush As New SolidBrush(Theme.AccentYellow)
+            e.Graphics.FillRectangle(brush, left, pnlHeader.Height - Theme.Scale(pnlHeader, 3), logoSize, Theme.Scale(pnlHeader, 3))
+        End Using
+    End Sub
+
+    Private Sub lstApps_DrawItem(sender As Object, e As DrawItemEventArgs) Handles lstApps.DrawItem
+        If e.Index < 0 Then Return
+        Dim isSelected As Boolean = (e.State And DrawItemState.Selected) = DrawItemState.Selected
+        Using back As New SolidBrush(If(isSelected, Theme.Blend(Theme.Surface, Theme.Accent, 0.1), lstApps.BackColor))
+            e.Graphics.FillRectangle(back, e.Bounds)
+        End Using
+        If isSelected Then
+            Using bar As New SolidBrush(Theme.Accent)
+                e.Graphics.FillRectangle(bar, e.Bounds.X, e.Bounds.Y, Theme.Scale(lstApps, 3), e.Bounds.Height)
+            End Using
+        End If
+        Dim pad As Integer = Theme.Scale(lstApps, 12)
+        Dim textBounds As New Rectangle(e.Bounds.X + pad, e.Bounds.Y, e.Bounds.Width - pad * 2, e.Bounds.Height)
+        TextRenderer.DrawText(e.Graphics, lstApps.GetItemText(lstApps.Items(e.Index)), e.Font, textBounds,
+                              Theme.TextPrimary,
+                              TextFormatFlags.VerticalCenter Or TextFormatFlags.EndEllipsis Or TextFormatFlags.NoPrefix)
     End Sub
 
     Public Sub New(appIdToSelect As String)
@@ -112,14 +151,14 @@ Public Class frmSettings
     Private Sub LstApps_DragEnter(sender As Object, e As DragEventArgs) Handles lstApps.DragEnter
         If e.Data.GetDataPresent(DataFormats.FileDrop) Then
             e.Effect = DragDropEffects.Copy
-            lstApps.BackColor = Color.FromArgb(230, 244, 255)
+            lstApps.BackColor = Theme.BusyTint
         Else
             e.Effect = DragDropEffects.None
         End If
     End Sub
 
     Private Sub LstApps_DragLeave(sender As Object, e As EventArgs) Handles lstApps.DragLeave
-        lstApps.BackColor = SystemColors.Window
+        lstApps.BackColor = Theme.Surface
     End Sub
 
     ''' <summary>
@@ -129,7 +168,7 @@ Public Class frmSettings
     ''' without needing to resolve shortcut targets.
     ''' </summary>
     Private Sub LstApps_DragDrop(sender As Object, e As DragEventArgs) Handles lstApps.DragDrop
-        lstApps.BackColor = SystemColors.Window
+        lstApps.BackColor = Theme.Surface
         If Not e.Data.GetDataPresent(DataFormats.FileDrop) Then Return
 
         Dim droppedPaths() As String = CType(e.Data.GetData(DataFormats.FileDrop), String())

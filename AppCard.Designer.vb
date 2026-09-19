@@ -37,9 +37,10 @@ Partial Class AppCard
         '
         ' picIcon
         '
-        picIcon.Location = New Point(8, 8)
+        picIcon.BackColor = Color.Transparent
+        picIcon.Location = New Point(20, 16)
         picIcon.Name = "picIcon"
-        picIcon.Size = New Size(32, 32)
+        picIcon.Size = New Size(36, 36)
         picIcon.SizeMode = PictureBoxSizeMode.Zoom
         picIcon.TabIndex = 0
         picIcon.TabStop = False
@@ -47,81 +48,76 @@ Partial Class AppCard
         ' lblName
         '
         lblName.AutoEllipsis = True
-        lblName.Font = New Font("Segoe UI", 11.25F, FontStyle.Bold)
-        lblName.ForeColor = Color.FromArgb(CByte(44), CByte(62), CByte(80))
-        lblName.Location = New Point(48, 6)
+        lblName.BackColor = Color.Transparent
+        lblName.Font = New Font("Segoe UI Semibold", 11.0F)
+        lblName.ForeColor = Color.FromArgb(CByte(31), CByte(41), CByte(55))
+        lblName.Location = New Point(66, 14)
         lblName.Name = "lblName"
-        lblName.Size = New Size(150, 20)
+        lblName.Size = New Size(162, 22)
         lblName.TabIndex = 1
         '
         ' lblSubGroup
         '
         lblSubGroup.AutoEllipsis = True
-        lblSubGroup.Font = New Font("Segoe UI", 9.9F, FontStyle.Italic)
-        lblSubGroup.ForeColor = Color.FromArgb(CByte(127), CByte(140), CByte(141))
-        lblSubGroup.Location = New Point(48, 27)
+        lblSubGroup.BackColor = Color.Transparent
+        lblSubGroup.Font = New Font("Segoe UI", 9.0F)
+        lblSubGroup.ForeColor = Color.FromArgb(CByte(107), CByte(114), CByte(128))
+        lblSubGroup.Location = New Point(66, 37)
         lblSubGroup.Name = "lblSubGroup"
-        lblSubGroup.Size = New Size(150, 19)
+        lblSubGroup.Size = New Size(162, 18)
         lblSubGroup.TabIndex = 2
         '
         ' lblDate
         '
         lblDate.AutoEllipsis = True
+        lblDate.BackColor = Color.Transparent
         lblDate.Cursor = Cursors.Hand
-        lblDate.ForeColor = Color.FromArgb(CByte(39), CByte(174), CByte(96))
-        lblDate.Location = New Point(48, 47)
+        lblDate.Font = New Font("Segoe UI", 8.25F)
+        lblDate.ForeColor = Color.FromArgb(CByte(107), CByte(114), CByte(128))
+        lblDate.Location = New Point(66, 56)
         lblDate.Name = "lblDate"
-        lblDate.Size = New Size(150, 16)
+        lblDate.Size = New Size(187, 18)
         lblDate.TabIndex = 3
         '
         ' lblDesc
         '
         lblDesc.AutoEllipsis = True
-        lblDesc.ForeColor = Color.DimGray
-        lblDesc.Location = New Point(48, 64)
+        lblDesc.BackColor = Color.Transparent
+        lblDesc.Font = New Font("Segoe UI", 9.0F)
+        lblDesc.ForeColor = Color.FromArgb(CByte(75), CByte(85), CByte(99))
+        lblDesc.Location = New Point(66, 75)
         lblDesc.Name = "lblDesc"
-        lblDesc.Size = New Size(150, 20)
+        lblDesc.Size = New Size(187, 20)
         lblDesc.TabIndex = 4
         '
         ' btnSettings
         '
-        btnSettings.BackColor = Color.Transparent
-        btnSettings.Cursor = Cursors.Hand
-        btnSettings.FlatAppearance.BorderSize = 0
-        btnSettings.FlatStyle = FlatStyle.Flat
-        btnSettings.Font = New Font("Segoe UI", 9.9F)
-        btnSettings.ForeColor = Color.FromArgb(CByte(50), CByte(50), CByte(50))
-        btnSettings.Location = New Point(8, 85)
+        btnSettings.Font = New Font("Segoe MDL2 Assets", 11.0F)
+        btnSettings.Location = New Point(16, 104)
         btnSettings.Name = "btnSettings"
-        btnSettings.Size = New Size(32, 30)
+        btnSettings.Size = New Size(34, 28)
         btnSettings.TabIndex = 6
-        btnSettings.Text = "⚙"
         btnSettings.UseVisualStyleBackColor = False
         '
         ' btnLaunch
         '
-        btnLaunch.BackColor = Color.FromArgb(CByte(46), CByte(204), CByte(113))
-        btnLaunch.Cursor = Cursors.Hand
-        btnLaunch.FlatAppearance.BorderSize = 0
-        btnLaunch.FlatStyle = FlatStyle.Flat
-        btnLaunch.Font = New Font("Segoe UI", 9.9F)
-        btnLaunch.ForeColor = Color.White
-        btnLaunch.Location = New Point(118, 85)
+        btnLaunch.Font = New Font("Segoe UI Semibold", 9.0F)
+        btnLaunch.Location = New Point(153, 104)
         btnLaunch.Name = "btnLaunch"
-        btnLaunch.Size = New Size(95, 30)
+        btnLaunch.Size = New Size(100, 28)
         btnLaunch.TabIndex = 5
-        btnLaunch.Text = "▶ Launch"
         btnLaunch.UseVisualStyleBackColor = False
         '
         ' chkSelect
         '
+        chkSelect.BackColor = Color.Transparent
         chkSelect.Cursor = Cursors.Hand
-        chkSelect.Location = New Point(199, 4)
+        chkSelect.Location = New Point(233, 14)
         chkSelect.Name = "chkSelect"
         chkSelect.Size = New Size(20, 20)
         chkSelect.TabIndex = 7
         toolTip.SetToolTip(chkSelect, "Include in Launch Selected (this session only)")
-        chkSelect.UseVisualStyleBackColor = True
+        chkSelect.UseVisualStyleBackColor = False
         '
         ' toolTip
         '
@@ -131,8 +127,9 @@ Partial Class AppCard
         '
         ' AppCard
         '
-        AutoScaleMode = AutoScaleMode.None
-        BorderStyle = BorderStyle.FixedSingle
+        AutoScaleDimensions = New SizeF(96.0F, 96.0F)
+        AutoScaleMode = AutoScaleMode.Dpi
+        BackColor = Color.FromArgb(CByte(246), CByte(247), CByte(249))
         Controls.Add(picIcon)
         Controls.Add(lblName)
         Controls.Add(lblSubGroup)
@@ -141,9 +138,9 @@ Partial Class AppCard
         Controls.Add(btnLaunch)
         Controls.Add(btnSettings)
         Controls.Add(chkSelect)
-        Margin = New Padding(8)
+        Margin = New Padding(4)
         Name = "AppCard"
-        Size = New Size(225, 125)
+        Size = New Size(272, 146)
         CType(picIcon, System.ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
     End Sub

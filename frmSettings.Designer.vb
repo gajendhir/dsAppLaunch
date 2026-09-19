@@ -23,6 +23,9 @@ Partial Class frmSettings
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         components = New System.ComponentModel.Container()
+        pnlHeader = New Panel()
+        lblHeaderTitle = New Label()
+        lblHeaderSubtitle = New Label()
         lblApps = New Label()
         lstApps = New ListBox()
         btnAdd = New Button()
@@ -53,13 +56,50 @@ Partial Class frmSettings
         lblFooterSupport = New Label()
         toolTip = New ToolTip(components)
         CType(nudSortOrder, System.ComponentModel.ISupportInitialize).BeginInit()
+        pnlHeader.SuspendLayout()
         SuspendLayout()
+        '
+        ' pnlHeader
+        '
+        pnlHeader.BackColor = Color.White
+        pnlHeader.Controls.Add(lblHeaderSubtitle)
+        pnlHeader.Controls.Add(lblHeaderTitle)
+        pnlHeader.Dock = DockStyle.Top
+        pnlHeader.Location = New Point(0, 0)
+        pnlHeader.Name = "pnlHeader"
+        pnlHeader.Size = New Size(704, 64)
+        pnlHeader.TabIndex = 30
+        '
+        ' lblHeaderTitle
+        '
+        lblHeaderTitle.AutoEllipsis = True
+        lblHeaderTitle.BackColor = Color.Transparent
+        lblHeaderTitle.Font = New Font("Segoe UI Semibold", 13.0F)
+        lblHeaderTitle.ForeColor = Color.FromArgb(CByte(31), CByte(41), CByte(55))
+        lblHeaderTitle.Location = New Point(66, 10)
+        lblHeaderTitle.Name = "lblHeaderTitle"
+        lblHeaderTitle.Size = New Size(400, 26)
+        lblHeaderTitle.TabIndex = 0
+        lblHeaderTitle.Text = "Manager"
+        '
+        ' lblHeaderSubtitle
+        '
+        lblHeaderSubtitle.AutoEllipsis = True
+        lblHeaderSubtitle.BackColor = Color.Transparent
+        lblHeaderSubtitle.Font = New Font("Segoe UI", 9.0F)
+        lblHeaderSubtitle.ForeColor = Color.FromArgb(CByte(107), CByte(114), CByte(128))
+        lblHeaderSubtitle.Location = New Point(67, 36)
+        lblHeaderSubtitle.Name = "lblHeaderSubtitle"
+        lblHeaderSubtitle.Size = New Size(400, 20)
+        lblHeaderSubtitle.TabIndex = 1
+        lblHeaderSubtitle.Text = "Add, edit and order your applications"
         '
         ' lblApps
         '
         lblApps.AutoSize = True
-        lblApps.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)
-        lblApps.Location = New Point(20, 15)
+        lblApps.Font = New Font("Segoe UI Semibold", 9.0F)
+        lblApps.ForeColor = Color.FromArgb(CByte(31), CByte(41), CByte(55))
+        lblApps.Location = New Point(20, 79)
         lblApps.Name = "lblApps"
         lblApps.Size = New Size(140, 15)
         lblApps.TabIndex = 0
@@ -70,8 +110,9 @@ Partial Class frmSettings
         lstApps.AllowDrop = True
         lstApps.DisplayMember = "Name"
         lstApps.Font = New Font("Segoe UI", 9.5F)
-        lstApps.ItemHeight = 17
-        lstApps.Location = New Point(20, 40)
+        lstApps.DrawMode = DrawMode.OwnerDrawFixed
+        lstApps.ItemHeight = 28
+        lstApps.Location = New Point(20, 104)
         lstApps.Name = "lstApps"
         lstApps.Size = New Size(200, 391)
         lstApps.TabIndex = 1
@@ -79,9 +120,8 @@ Partial Class frmSettings
         '
         ' btnAdd
         '
-        btnAdd.BackColor = Color.White
-        btnAdd.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)
-        btnAdd.Location = New Point(20, 440)
+        btnAdd.Font = New Font("Segoe UI Semibold", 9.0F)
+        btnAdd.Location = New Point(20, 504)
         btnAdd.Name = "btnAdd"
         btnAdd.Size = New Size(95, 32)
         btnAdd.TabIndex = 2
@@ -91,10 +131,8 @@ Partial Class frmSettings
         '
         ' btnRemove
         '
-        btnRemove.BackColor = Color.White
-        btnRemove.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)
-        btnRemove.ForeColor = Color.DarkRed
-        btnRemove.Location = New Point(125, 440)
+        btnRemove.Font = New Font("Segoe UI Semibold", 9.0F)
+        btnRemove.Location = New Point(125, 504)
         btnRemove.Name = "btnRemove"
         btnRemove.Size = New Size(95, 32)
         btnRemove.TabIndex = 3
@@ -105,7 +143,8 @@ Partial Class frmSettings
         ' lblName
         '
         lblName.AutoSize = True
-        lblName.Location = New Point(240, 15)
+        lblName.Location = New Point(240, 79)
+        lblName.ForeColor = Color.FromArgb(CByte(75), CByte(85), CByte(99))
         lblName.Name = "lblName"
         lblName.Size = New Size(106, 15)
         lblName.TabIndex = 4
@@ -113,7 +152,7 @@ Partial Class frmSettings
         '
         ' txtName
         '
-        txtName.Location = New Point(240, 35)
+        txtName.Location = New Point(240, 99)
         txtName.Name = "txtName"
         txtName.Size = New Size(400, 23)
         txtName.TabIndex = 5
@@ -121,7 +160,8 @@ Partial Class frmSettings
         ' lblExePath
         '
         lblExePath.AutoSize = True
-        lblExePath.Location = New Point(240, 65)
+        lblExePath.Location = New Point(240, 129)
+        lblExePath.ForeColor = Color.FromArgb(CByte(75), CByte(85), CByte(99))
         lblExePath.Name = "lblExePath"
         lblExePath.Size = New Size(130, 15)
         lblExePath.TabIndex = 6
@@ -130,7 +170,7 @@ Partial Class frmSettings
         ' txtExePath
         '
         txtExePath.AllowDrop = True
-        txtExePath.Location = New Point(240, 85)
+        txtExePath.Location = New Point(240, 149)
         txtExePath.Name = "txtExePath"
         txtExePath.Size = New Size(320, 23)
         txtExePath.TabIndex = 7
@@ -138,7 +178,7 @@ Partial Class frmSettings
         '
         ' btnBrowseExe
         '
-        btnBrowseExe.Location = New Point(565, 84)
+        btnBrowseExe.Location = New Point(565, 148)
         btnBrowseExe.Name = "btnBrowseExe"
         btnBrowseExe.Size = New Size(75, 27)
         btnBrowseExe.TabIndex = 8
@@ -149,7 +189,8 @@ Partial Class frmSettings
         ' lblIconPath
         '
         lblIconPath.AutoSize = True
-        lblIconPath.Location = New Point(240, 115)
+        lblIconPath.Location = New Point(240, 179)
+        lblIconPath.ForeColor = Color.FromArgb(CByte(75), CByte(85), CByte(99))
         lblIconPath.Name = "lblIconPath"
         lblIconPath.Size = New Size(160, 15)
         lblIconPath.TabIndex = 9
@@ -158,7 +199,7 @@ Partial Class frmSettings
         ' txtIconPath
         '
         txtIconPath.AllowDrop = True
-        txtIconPath.Location = New Point(240, 135)
+        txtIconPath.Location = New Point(240, 199)
         txtIconPath.Name = "txtIconPath"
         txtIconPath.Size = New Size(320, 23)
         txtIconPath.TabIndex = 10
@@ -166,7 +207,7 @@ Partial Class frmSettings
         '
         ' btnBrowseIcon
         '
-        btnBrowseIcon.Location = New Point(565, 134)
+        btnBrowseIcon.Location = New Point(565, 198)
         btnBrowseIcon.Name = "btnBrowseIcon"
         btnBrowseIcon.Size = New Size(75, 27)
         btnBrowseIcon.TabIndex = 11
@@ -177,7 +218,8 @@ Partial Class frmSettings
         ' lblGroup
         '
         lblGroup.AutoSize = True
-        lblGroup.Location = New Point(240, 165)
+        lblGroup.Location = New Point(240, 229)
+        lblGroup.ForeColor = Color.FromArgb(CByte(75), CByte(85), CByte(99))
         lblGroup.Name = "lblGroup"
         lblGroup.Size = New Size(102, 15)
         lblGroup.TabIndex = 12
@@ -185,7 +227,7 @@ Partial Class frmSettings
         '
         ' txtGroup
         '
-        txtGroup.Location = New Point(240, 185)
+        txtGroup.Location = New Point(240, 249)
         txtGroup.Name = "txtGroup"
         txtGroup.Size = New Size(200, 23)
         txtGroup.TabIndex = 13
@@ -193,7 +235,8 @@ Partial Class frmSettings
         ' lblSubGroup
         '
         lblSubGroup.AutoSize = True
-        lblSubGroup.Location = New Point(450, 165)
+        lblSubGroup.Location = New Point(450, 229)
+        lblSubGroup.ForeColor = Color.FromArgb(CByte(75), CByte(85), CByte(99))
         lblSubGroup.Name = "lblSubGroup"
         lblSubGroup.Size = New Size(125, 15)
         lblSubGroup.TabIndex = 14
@@ -201,7 +244,7 @@ Partial Class frmSettings
         '
         ' txtSubGroup
         '
-        txtSubGroup.Location = New Point(450, 185)
+        txtSubGroup.Location = New Point(450, 249)
         txtSubGroup.Name = "txtSubGroup"
         txtSubGroup.Size = New Size(190, 23)
         txtSubGroup.TabIndex = 15
@@ -209,7 +252,8 @@ Partial Class frmSettings
         ' lblCategory
         '
         lblCategory.AutoSize = True
-        lblCategory.Location = New Point(240, 215)
+        lblCategory.Location = New Point(240, 279)
+        lblCategory.ForeColor = Color.FromArgb(CByte(75), CByte(85), CByte(99))
         lblCategory.Name = "lblCategory"
         lblCategory.Size = New Size(58, 15)
         lblCategory.TabIndex = 16
@@ -217,7 +261,7 @@ Partial Class frmSettings
         '
         ' txtCategory
         '
-        txtCategory.Location = New Point(240, 235)
+        txtCategory.Location = New Point(240, 299)
         txtCategory.Name = "txtCategory"
         txtCategory.Size = New Size(200, 23)
         txtCategory.TabIndex = 17
@@ -225,7 +269,8 @@ Partial Class frmSettings
         ' lblCardColor
         '
         lblCardColor.AutoSize = True
-        lblCardColor.Location = New Point(450, 215)
+        lblCardColor.Location = New Point(450, 279)
+        lblCardColor.ForeColor = Color.FromArgb(CByte(75), CByte(85), CByte(99))
         lblCardColor.Name = "lblCardColor"
         lblCardColor.Size = New Size(132, 15)
         lblCardColor.TabIndex = 18
@@ -235,14 +280,14 @@ Partial Class frmSettings
         '
         pnlColorPreview.BackColor = Color.White
         pnlColorPreview.BorderStyle = BorderStyle.FixedSingle
-        pnlColorPreview.Location = New Point(450, 235)
+        pnlColorPreview.Location = New Point(450, 299)
         pnlColorPreview.Name = "pnlColorPreview"
         pnlColorPreview.Size = New Size(30, 25)
         pnlColorPreview.TabIndex = 19
         '
         ' btnPickColor
         '
-        btnPickColor.Location = New Point(485, 234)
+        btnPickColor.Location = New Point(485, 298)
         btnPickColor.Name = "btnPickColor"
         btnPickColor.Size = New Size(155, 27)
         btnPickColor.TabIndex = 20
@@ -253,7 +298,8 @@ Partial Class frmSettings
         ' lblDescription
         '
         lblDescription.AutoSize = True
-        lblDescription.Location = New Point(240, 265)
+        lblDescription.Location = New Point(240, 329)
+        lblDescription.ForeColor = Color.FromArgb(CByte(75), CByte(85), CByte(99))
         lblDescription.Name = "lblDescription"
         lblDescription.Size = New Size(70, 15)
         lblDescription.TabIndex = 21
@@ -261,7 +307,7 @@ Partial Class frmSettings
         '
         ' txtDescription
         '
-        txtDescription.Location = New Point(240, 285)
+        txtDescription.Location = New Point(240, 349)
         txtDescription.Multiline = True
         txtDescription.Name = "txtDescription"
         txtDescription.Size = New Size(400, 60)
@@ -270,7 +316,8 @@ Partial Class frmSettings
         ' lblSortOrder
         '
         lblSortOrder.AutoSize = True
-        lblSortOrder.Location = New Point(240, 355)
+        lblSortOrder.Location = New Point(240, 419)
+        lblSortOrder.ForeColor = Color.FromArgb(CByte(75), CByte(85), CByte(99))
         lblSortOrder.Name = "lblSortOrder"
         lblSortOrder.Size = New Size(130, 15)
         lblSortOrder.TabIndex = 23
@@ -278,7 +325,7 @@ Partial Class frmSettings
         '
         ' nudSortOrder
         '
-        nudSortOrder.Location = New Point(240, 375)
+        nudSortOrder.Location = New Point(240, 439)
         nudSortOrder.Maximum = New Decimal(New Integer() {99999, 0, 0, 0})
         nudSortOrder.Minimum = New Decimal(New Integer() {99999, 0, 0, Integer.MinValue})
         nudSortOrder.Name = "nudSortOrder"
@@ -289,7 +336,7 @@ Partial Class frmSettings
         ' chkSelected
         '
         chkSelected.AutoSize = True
-        chkSelected.Location = New Point(340, 377)
+        chkSelected.Location = New Point(340, 441)
         chkSelected.Name = "chkSelected"
         chkSelected.Size = New Size(252, 19)
         chkSelected.TabIndex = 25
@@ -299,26 +346,23 @@ Partial Class frmSettings
         '
         ' btnSave
         '
-        btnSave.BackColor = Color.FromArgb(CByte(46), CByte(204), CByte(113))
-        btnSave.FlatStyle = FlatStyle.Flat
-        btnSave.Font = New Font("Segoe UI", 10.0F, FontStyle.Bold)
-        btnSave.ForeColor = Color.White
-        btnSave.Location = New Point(420, 440)
+        btnSave.Font = New Font("Segoe UI Semibold", 10.0F)
+        btnSave.Location = New Point(420, 504)
         btnSave.Name = "btnSave"
         btnSave.Size = New Size(220, 35)
         btnSave.TabIndex = 26
-        btnSave.Text = "💾 Save & Apply Changes"
+        btnSave.Text = "Save & Apply Changes"
         toolTip.SetToolTip(btnSave, "Save changes to apps.json")
         btnSave.UseMnemonic = False
         btnSave.UseVisualStyleBackColor = False
         '
         ' lblFooterSupport
         '
-        lblFooterSupport.Font = New Font("Segoe UI", 8.5F, FontStyle.Bold)
-        lblFooterSupport.ForeColor = Color.Red
-        lblFooterSupport.Location = New Point(0, 495)
+        lblFooterSupport.Font = New Font("Segoe UI", 8.25F)
+        lblFooterSupport.ForeColor = Color.FromArgb(CByte(107), CByte(114), CByte(128))
+        lblFooterSupport.Location = New Point(0, 559)
         lblFooterSupport.Name = "lblFooterSupport"
-        lblFooterSupport.Size = New Size(705, 20)
+        lblFooterSupport.Size = New Size(684, 20)
         lblFooterSupport.TabIndex = 27
         lblFooterSupport.Text = "S/W Support By Data Spec"
         lblFooterSupport.TextAlign = ContentAlignment.MiddleRight
@@ -333,8 +377,10 @@ Partial Class frmSettings
         '
         AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         AutoScaleMode = AutoScaleMode.Font
+        BackColor = Color.FromArgb(CByte(246), CByte(247), CByte(249))
         BackColor = Color.FromArgb(CByte(245), CByte(246), CByte(250))
-        ClientSize = New Size(704, 521)
+        ClientSize = New Size(704, 585)
+        Controls.Add(pnlHeader)
         Controls.Add(lblApps)
         Controls.Add(lstApps)
         Controls.Add(btnAdd)
@@ -370,10 +416,14 @@ Partial Class frmSettings
         StartPosition = FormStartPosition.CenterParent
         Text = "Data Spec Application Launcher - Manager"
         CType(nudSortOrder, System.ComponentModel.ISupportInitialize).EndInit()
+        pnlHeader.ResumeLayout(False)
         ResumeLayout(False)
         PerformLayout()
     End Sub
 
+    Friend WithEvents pnlHeader As Panel
+    Friend WithEvents lblHeaderTitle As Label
+    Friend WithEvents lblHeaderSubtitle As Label
     Friend WithEvents lblApps As Label
     Friend WithEvents lstApps As ListBox
     Friend WithEvents btnAdd As Button
