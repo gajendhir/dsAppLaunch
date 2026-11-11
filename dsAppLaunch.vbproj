@@ -24,7 +24,7 @@
 
     <PropertyGroup>
         <MajorVersion>2</MajorVersion>
-        <MinorVersion>4</MinorVersion>
+        <MinorVersion>5</MinorVersion>
         <ProjectStartDate>2000-01-01</ProjectStartDate>
         <SecondsFromMidNight>$([MSBuild]::Divide($([System.DateTime]::Now.TimeOfDay.TotalSeconds), 2))</SecondsFromMidNight>
         <BuildNumber>$([System.DateTime]::Now.Subtract($([System.DateTime]::Parse($(ProjectStartDate)))).Days)</BuildNumber>

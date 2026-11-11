@@ -50,7 +50,7 @@ copy [apps.sample.json](../apps.sample.json) to
 The assembly `Version` is computed at build time as
 `Major.Minor.<days since 2000-01-01>.<seconds since midnight / 2>` (see the
 `PropertyGroup` in `dsAppLaunch.vbproj`); bump `MajorVersion` /
-`MinorVersion` by hand (currently 2.4). The MSI carries its own three-part version in
+`MinorVersion` by hand (currently 2.5). The MSI carries its own three-part version in
 `Installer/Package.wxs` because Windows Installer ignores the fourth field
 when deciding whether a package is newer.
 

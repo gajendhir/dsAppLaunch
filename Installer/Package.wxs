@@ -3,7 +3,7 @@
 
   <Package Name="Data Spec Application Launcher"
            Manufacturer="Data Spec"
-           Version="2.4.0"
+           Version="2.5.0"
            UpgradeCode="BFDF6AF8-8582-47E3-963D-F76EC795412F"
            Compressed="yes">
 
