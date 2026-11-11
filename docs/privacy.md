@@ -2,6 +2,8 @@
 
 _Last updated: 2026-11-11_
 
+The published, canonical version of this policy is at <https://www.dataspec.info/dsAppLaunch/privacy.html> (the Microsoft Store listing links there).
+
 Data Spec Application Launcher ("dsAppLaunch") is a desktop program that shows
 a grid of the programs you choose and starts them. This page explains what it
 does and does not do with your information.

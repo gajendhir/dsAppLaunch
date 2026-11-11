@@ -9,9 +9,9 @@ already in `AppxManifest.xml`; the package is built by `build-msix.ps1`.
 - **Category / subcategory:** Productivity (alternative: Utilities & tools)
 - **Price:** Free
 - **Availability:** all markets; Windows 10 1809 (10.0.17763) and later; desktop; x64
-- **Privacy policy URL:** https://github.com/gajendhir/dsAppLaunch/blob/main/docs/privacy.md
+- **Privacy policy URL:** https://www.dataspec.info/dsAppLaunch/privacy.html
 - **Website:** https://www.dataspec.info
-- **Support contact:** https://github.com/gajendhir/dsAppLaunch/issues
+- **Support contact:** gajendhir@dataspec.info (or https://github.com/gajendhir/dsAppLaunch/issues)
 - **Copyright:** © Data Spec
 - **Age rating (IARC questionnaire):** answer **No** to every content question (violence, sexual
   content, language, gambling, user-generated content, location sharing, purchases, web browsing).
@@ -77,5 +77,5 @@ desktop process to start other Win32 programs and read their icons.
 ## Submission checklist
 - [ ] `Store\build-msix.ps1` run without `-TestSign`; upload `Store\out\*.msix` (unsigned; the Store signs it)
 - [ ] Sideload test and Windows App Certification Kit passed
-- [ ] Privacy policy URL live (public repo published)
+- [ ] Privacy policy page uploaded to the website (project dssite, folder dsAppLaunch) and opens at the URL above
 - [ ] Screenshots retaken, listing text pasted, age rating completed

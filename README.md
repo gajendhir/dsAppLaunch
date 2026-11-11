@@ -65,7 +65,7 @@ included as [apps.sample.json](apps.sample.json).
 ## Privacy
 
 dsAppLaunch collects no data and makes no network connections of its own — see the
-[Privacy Policy](docs/privacy.md).
+[Privacy Policy](https://www.dataspec.info/dsAppLaunch/privacy.html).
 
 ## License
 
