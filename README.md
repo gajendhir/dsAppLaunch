@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Assets/dslogo.png" alt="Data Spec" width="96" />
+  <img src="Assets/applogo.png" alt="dsAppLaunch" width="96" />
 </p>
 
 <h1 align="center">dsAppLaunch</h1>
@@ -61,6 +61,11 @@ Your list of applications is stored in
 `%AppData%\Data Spec\dsAppLaunch\apps.json`. It is created on first run and
 can be edited through the settings dialog or by hand. A sample file is
 included as [apps.sample.json](apps.sample.json).
+
+## Privacy
+
+dsAppLaunch collects no data and makes no network connections of its own — see the
+[Privacy Policy](docs/privacy.md).
 
 ## License
 

@@ -38,9 +38,9 @@ Partial Class AppCard
         ' picIcon
         '
         picIcon.BackColor = Color.Transparent
-        picIcon.Location = New Point(20, 16)
+        picIcon.Location = New Point(14, 13)
         picIcon.Name = "picIcon"
-        picIcon.Size = New Size(36, 36)
+        picIcon.Size = New Size(34, 34)
         picIcon.SizeMode = PictureBoxSizeMode.Zoom
         picIcon.TabIndex = 0
         picIcon.TabStop = False
@@ -49,22 +49,22 @@ Partial Class AppCard
         '
         lblName.AutoEllipsis = True
         lblName.BackColor = Color.Transparent
-        lblName.Font = New Font("Segoe UI Semibold", 11.0F)
+        lblName.Font = New Font("Segoe UI Semibold", 10.0F)
         lblName.ForeColor = Color.FromArgb(CByte(31), CByte(41), CByte(55))
-        lblName.Location = New Point(66, 14)
+        lblName.Location = New Point(56, 9)
         lblName.Name = "lblName"
-        lblName.Size = New Size(162, 22)
+        lblName.Size = New Size(130, 21)
         lblName.TabIndex = 1
         '
         ' lblSubGroup
         '
         lblSubGroup.AutoEllipsis = True
         lblSubGroup.BackColor = Color.Transparent
-        lblSubGroup.Font = New Font("Segoe UI", 9.0F)
+        lblSubGroup.Font = New Font("Segoe UI", 8.25F)
         lblSubGroup.ForeColor = Color.FromArgb(CByte(107), CByte(114), CByte(128))
-        lblSubGroup.Location = New Point(66, 37)
+        lblSubGroup.Location = New Point(56, 31)
         lblSubGroup.Name = "lblSubGroup"
-        lblSubGroup.Size = New Size(162, 18)
+        lblSubGroup.Size = New Size(152, 16)
         lblSubGroup.TabIndex = 2
         '
         ' lblDate
@@ -72,39 +72,40 @@ Partial Class AppCard
         lblDate.AutoEllipsis = True
         lblDate.BackColor = Color.Transparent
         lblDate.Cursor = Cursors.Hand
-        lblDate.Font = New Font("Segoe UI", 8.25F)
+        lblDate.Font = New Font("Segoe UI", 7.5F)
         lblDate.ForeColor = Color.FromArgb(CByte(107), CByte(114), CByte(128))
-        lblDate.Location = New Point(66, 56)
+        lblDate.Location = New Point(46, 71)
         lblDate.Name = "lblDate"
-        lblDate.Size = New Size(187, 18)
+        lblDate.Size = New Size(84, 16)
         lblDate.TabIndex = 3
+        lblDate.TextAlign = ContentAlignment.MiddleCenter
         '
         ' lblDesc
         '
         lblDesc.AutoEllipsis = True
         lblDesc.BackColor = Color.Transparent
-        lblDesc.Font = New Font("Segoe UI", 9.0F)
+        lblDesc.Font = New Font("Segoe UI", 8.25F)
         lblDesc.ForeColor = Color.FromArgb(CByte(75), CByte(85), CByte(99))
-        lblDesc.Location = New Point(66, 75)
+        lblDesc.Location = New Point(56, 48)
         lblDesc.Name = "lblDesc"
-        lblDesc.Size = New Size(187, 20)
+        lblDesc.Size = New Size(152, 18)
         lblDesc.TabIndex = 4
         '
         ' btnSettings
         '
-        btnSettings.Font = New Font("Segoe MDL2 Assets", 11.0F)
-        btnSettings.Location = New Point(16, 104)
+        btnSettings.Font = New Font("Segoe MDL2 Assets", 10.0F)
+        btnSettings.Location = New Point(12, 68)
         btnSettings.Name = "btnSettings"
-        btnSettings.Size = New Size(34, 28)
+        btnSettings.Size = New Size(30, 24)
         btnSettings.TabIndex = 6
         btnSettings.UseVisualStyleBackColor = False
         '
         ' btnLaunch
         '
-        btnLaunch.Font = New Font("Segoe UI Semibold", 9.0F)
-        btnLaunch.Location = New Point(153, 104)
+        btnLaunch.Font = New Font("Segoe UI Semibold", 8.25F)
+        btnLaunch.Location = New Point(132, 68)
         btnLaunch.Name = "btnLaunch"
-        btnLaunch.Size = New Size(100, 28)
+        btnLaunch.Size = New Size(76, 24)
         btnLaunch.TabIndex = 5
         btnLaunch.UseVisualStyleBackColor = False
         '
@@ -112,7 +113,7 @@ Partial Class AppCard
         '
         chkSelect.BackColor = Color.Transparent
         chkSelect.Cursor = Cursors.Hand
-        chkSelect.Location = New Point(233, 14)
+        chkSelect.Location = New Point(190, 10)
         chkSelect.Name = "chkSelect"
         chkSelect.Size = New Size(20, 20)
         chkSelect.TabIndex = 7
@@ -140,7 +141,7 @@ Partial Class AppCard
         Controls.Add(chkSelect)
         Margin = New Padding(4)
         Name = "AppCard"
-        Size = New Size(272, 146)
+        Size = New Size(220, 100)
         CType(picIcon, System.ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
     End Sub

@@ -72,8 +72,9 @@ IconProvider.vb           icon resolution and caching
 AppGrouping.vb            grouping and ordering rules (pure logic)
 SelectionState.vb         session-only set of ticked cards
 apps.sample.json          example configuration
-Assets/dslogo.png         Data Spec logo (embedded resource)
-DataSpec.ico              application/installer icon, 16-256 px (also embedded)
+Assets/applogo.png        dsAppLaunch product logo (embedded resource, form headers)
+Assets/dslogo.png         Data Spec company logo, the D + bolt (embedded resource, footer)
+dsAppLaunch.ico           application/installer icon, 16-256 px (also embedded)
 Installer/                WiX v6 project for the MSI (Package.wxs, licence, banner and dialog bitmaps)
 docs/                     this documentation
 ```
@@ -96,7 +97,7 @@ unit test if a test project is added.
 |---|---|
 | `frmMain` | Fills a `FlowLayoutPanel` with one `AppCard` per app; handles reload, settings, All/None, Launch Selected |
 | `AppCard` | One card, painted in `OnPaint` (rounded surface, shadow, accent stripe, hover/selected/busy states). `Bind(probe)` fills it from an `AppProbe`; raises `LaunchRequested`, `SettingsRequested`, `SelectionChanged`; `SetBusy` shows the starting state |
-| `Theme` | Palette, font names, glyph codes, logo/icon loading, `RoundedRect`, `Blend`, `Scale`, and the `StylePrimary` / `StyleGhost` / `StyleIcon` / `StyleAccentOutline` button looks |
+| `Theme` | Palette, font names, glyph codes, logo/icon loading, `RoundedRect`, `Blend`, `Scale`, and the `StylePrimary` / `StyleSuccess` / `StyleGhost` / `StyleIcon` / `StyleAccentOutline` button looks |
 | `frmSettings` | Modal editor. Owns its own in-memory `BindingList(Of AppConfig)`; drag and drop adds entries or sets exe/icon paths |
 | `AppConfig` | POCO serialized directly by `System.Text.Json` |
 | `AppRepository` | `Load`, `Save`, `EnsureExists`; one cached serializer options set |
@@ -154,7 +155,8 @@ The visual style is deliberately small and lives in one place, `Theme.vb`.
   the Data Spec logo (orange, `Accent`). Button fills use a slightly darker
   orange than the logo's `#EB3D00` so white text reaches 4.5:1 contrast. The
   logo's yellow is too pale for text or fills on white, so it is used only for
-  thin accents (`AccentYellow`) and the card's busy tint.
+  thin accents (`AccentYellow`) and the card's busy tint. **Launch Selected** is filled green
+  (`Success`, `StyleSuccess`) to read as "ready to go"; Save stays orange.
 - **Type and icons.** Segoe UI, with `Segoe UI Semibold` for headings. Toolbar
   and card icons are Segoe MDL2 Assets glyphs (Windows 10 1607 or later)
   rather than emoji, which render inconsistently in WinForms.
@@ -164,7 +166,7 @@ The visual style is deliberately small and lives in one place, `Theme.vb`.
   `Theme.StyleXxx`. Glyph text is also assigned in code.
 - **Cards** are custom-painted on a double-buffered control with transparent
   child controls. The shadow is a few translucent rounded rectangles stacked
-  downwards. The card's `CardColor` is drawn as a 4 px left stripe and a 40 %
+  downwards. Cards are 220x100 design px. The card's `CardColor` is drawn as a 3 px left stripe and a 40 %
   tint of that colour; white means "no colour coding" and gives a plain card.
   A ticked card gets a 2 px accent border.
 - **DPI.** The app opts in to PerMonitorV2 in `ApplicationEvents.vb`. Cards use

@@ -73,7 +73,7 @@ your cards appear on the main screen.
 - **One program:** click **▶ Launch** on its card. The card shows a short
   "starting" state while Windows opens the program.
 - **Several programs:** tick the box at the top right of each card you want,
-  then click **▶ Launch Selected (n)** — the number is how many cards are
+  then click the green **▶ Launch Selected (n)** button — the number is how many cards are
   ticked. The programs start one after another, about a second apart, in the
   order they appear on screen.
   - **All** ticks every card and **None** clears every tick.
@@ -89,9 +89,9 @@ your cards appear on the main screen.
 ## What is on a card
 
 - The program's icon, its name, and the sub group
-- The date and time the program file was last changed ("Modified ...").
-  Double-click it to open the folder that contains the program.
-- The category and description
+- The date and time the program file was last changed, in the bottom row
+  (hover for the full text). Double-click it to open the folder that contains the program.
+- The category and description (hover to read it in full if it is cut short)
 - A tick box, a **Launch** button and a small gear button for that program
 
 Cards for programs on a network share appear straight away; their icon and

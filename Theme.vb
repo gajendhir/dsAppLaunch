@@ -25,6 +25,10 @@ Public NotInheritable Class Theme
     Public Shared ReadOnly AccentPressed As Color = Color.FromArgb(154, 38, 0)
     ' Yellow is too pale for text or fills on white: thin accents and the busy tint only.
     Public Shared ReadOnly AccentYellow As Color = Color.FromArgb(250, 204, 21)
+    ' Green "ready to go" fill (white text 5:1) for the button that starts the batch launch.
+    Public Shared ReadOnly Success As Color = Color.FromArgb(21, 128, 61)
+    Public Shared ReadOnly SuccessHover As Color = Color.FromArgb(22, 101, 52)
+    Public Shared ReadOnly SuccessPressed As Color = Color.FromArgb(20, 83, 45)
     Public Shared ReadOnly BusyTint As Color = Color.FromArgb(255, 248, 219)
 
     Public Shared ReadOnly DisabledBackground As Color = Color.FromArgb(229, 231, 235)
@@ -43,31 +47,48 @@ Public NotInheritable Class Theme
 
     ' ---- Logo and icon -------------------------------------------------------------------------
     Private Shared logoImage As Image
+    Private Shared companyLogoImage As Image
     Private Shared appIconCache As Icon
 
-    ''' <summary>The Data Spec window icon (multi-size), loaded once from the embedded resource. Never dispose it.</summary>
+    ''' <summary>The dsAppLaunch window icon (multi-size), loaded once from the embedded resource. Never dispose it.</summary>
     Public Shared Function AppIcon() As Icon
         If appIconCache Is Nothing Then
-            Using s As Stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("DataSpec.ico")
+            Using s As Stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("dsAppLaunch.ico")
                 If s IsNot Nothing Then appIconCache = New Icon(s)
             End Using
         End If
         Return appIconCache
     End Function
 
-    ''' <summary>The Data Spec logo (300 px, transparent), loaded once from the embedded resource. Never dispose it.</summary>
+    Private Shared Function LoadEmbeddedImage(resourceName As String) As Image
+        Using s As Stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName)
+            Return If(s IsNot Nothing, Image.FromStream(s), Nothing)
+        End Using
+    End Function
+
+    ''' <summary>The dsAppLaunch product logo (256 px rounded tile, transparent corners), loaded once. Never dispose it.</summary>
     Public Shared Function Logo() As Image
-        If logoImage Is Nothing Then
-            Using s As Stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("dslogo.png")
-                If s IsNot Nothing Then logoImage = Image.FromStream(s)
-            End Using
-        End If
+        If logoImage Is Nothing Then logoImage = LoadEmbeddedImage("applogo.png")
         Return logoImage
     End Function
 
-    ''' <summary>Draws the logo scaled into <paramref name="bounds"/> with high-quality resampling.</summary>
+    ''' <summary>The Data Spec company logo (the D with the bolt, 300 px, transparent), loaded once. Never dispose it.</summary>
+    Public Shared Function CompanyLogo() As Image
+        If companyLogoImage Is Nothing Then companyLogoImage = LoadEmbeddedImage("dslogo.png")
+        Return companyLogoImage
+    End Function
+
+    ''' <summary>Draws the product logo scaled into <paramref name="bounds"/> with high-quality resampling.</summary>
     Public Shared Sub DrawLogo(g As Graphics, bounds As Rectangle)
-        Dim img As Image = Logo()
+        DrawImageSmooth(g, Logo(), bounds)
+    End Sub
+
+    ''' <summary>Draws the Data Spec company logo (D + bolt) scaled into <paramref name="bounds"/>.</summary>
+    Public Shared Sub DrawCompanyLogo(g As Graphics, bounds As Rectangle)
+        DrawImageSmooth(g, CompanyLogo(), bounds)
+    End Sub
+
+    Private Shared Sub DrawImageSmooth(g As Graphics, img As Image, bounds As Rectangle)
         If img Is Nothing Then Return
         Dim previous = g.InterpolationMode
         g.InterpolationMode = InterpolationMode.HighQualityBicubic
@@ -113,6 +134,20 @@ Public NotInheritable Class Theme
         btn.FlatAppearance.MouseDownBackColor = AccentPressed
         Dim apply As EventHandler = Sub()
                                         btn.BackColor = If(btn.Enabled, Accent, DisabledBackground)
+                                        btn.ForeColor = If(btn.Enabled, Color.White, DisabledText)
+                                    End Sub
+        AddHandler btn.EnabledChanged, apply
+        apply(btn, EventArgs.Empty)
+    End Sub
+
+    ''' <summary>Filled green button: like StylePrimary but signals "ready to launch". Grey when disabled.</summary>
+    Public Shared Sub StyleSuccess(btn As Button)
+        FlatBase(btn)
+        btn.FlatAppearance.BorderSize = 0
+        btn.FlatAppearance.MouseOverBackColor = SuccessHover
+        btn.FlatAppearance.MouseDownBackColor = SuccessPressed
+        Dim apply As EventHandler = Sub()
+                                        btn.BackColor = If(btn.Enabled, Success, DisabledBackground)
                                         btn.ForeColor = If(btn.Enabled, Color.White, DisabledText)
                                     End Sub
         AddHandler btn.EnabledChanged, apply

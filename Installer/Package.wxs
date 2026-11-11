@@ -10,7 +10,7 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of dsAppLaunch is already installed." />
     <MediaTemplate EmbedCab="yes" />
 
-    <Icon Id="AppIcon" SourceFile="$(sys.SOURCEFILEDIR)..\DataSpec.ico" />
+    <Icon Id="AppIcon" SourceFile="$(sys.SOURCEFILEDIR)..\dsAppLaunch.ico" />
     <Property Id="ARPPRODUCTICON" Value="AppIcon" />
     <Property Id="ARPURLINFOABOUT" Value="https://www.dataspec.info" />
 

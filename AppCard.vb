@@ -11,8 +11,8 @@ Public Class AppCard
     Private Const InsetTop As Integer = 2
     Private Const InsetRight As Integer = 4
     Private Const InsetBottom As Integer = 6
-    Private Const CornerRadius As Integer = 10
-    Private Const StripeWidth As Integer = 4
+    Private Const CornerRadius As Integer = 8
+    Private Const StripeWidth As Integer = 3
 
     Private accentColor As Color = Color.White
     Private isBusy As Boolean
@@ -67,9 +67,13 @@ Public Class AppCard
         lblSubGroup.Visible = Not String.IsNullOrWhiteSpace(app.SubGroup)
 
         lblDate.Visible = probe.ExeExists
-        If probe.ExeExists Then lblDate.Text = $"Modified {probe.ExeLastWrite:dd-MM-yyyy HH:mm}"
+        If probe.ExeExists Then
+            lblDate.Text = $"{probe.ExeLastWrite:dd-MM-yy HH:mm}"
+            toolTip.SetToolTip(lblDate, $"Modified {probe.ExeLastWrite:dd-MM-yyyy HH:mm} (double-click to show in Explorer)")
+        End If
 
         lblDesc.Text = If(String.IsNullOrEmpty(app.Category), app.Description, $"[{app.Category}] {app.Description}")
+        toolTip.SetToolTip(lblDesc, lblDesc.Text)
 
         toolTip.SetToolTip(btnLaunch, $"Launch {app.Name}")
         toolTip.SetToolTip(btnSettings, $"Edit settings for {app.Name}")
@@ -85,15 +89,14 @@ Public Class AppCard
         Invalidate()
     End Sub
 
-    ' Stacks the visible text labels under the name; the description follows them (one line, ellipsized).
+    ' The sub-group (when present) sits under the name and the description follows it (one line,
+    ' ellipsized). The modified date lives in the bottom action row, so it never moves.
     Private Sub LayoutText()
         Dim nextTop As Integer = lblName.Bottom + 1
-        For Each lbl As Label In {lblSubGroup, lblDate}
-            If lbl.Visible Then
-                lbl.Top = nextTop
-                nextTop += lbl.Height + 1
-            End If
-        Next
+        If lblSubGroup.Visible Then
+            lblSubGroup.Top = nextTop
+            nextTop += lblSubGroup.Height + 1
+        End If
         lblDesc.Top = nextTop
     End Sub
 

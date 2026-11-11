@@ -6,7 +6,7 @@
         <StartupObject>Sub Main</StartupObject>
         <UseWindowsForms>true</UseWindowsForms>
         <MyType>WindowsForms</MyType>
-        <ApplicationIcon>DataSpec.ico</ApplicationIcon>
+        <ApplicationIcon>dsAppLaunch.ico</ApplicationIcon>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -35,8 +35,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="DataSpec.ico" LogicalName="DataSpec.ico" />
+        <EmbeddedResource Include="dsAppLaunch.ico" LogicalName="dsAppLaunch.ico" />
+        <EmbeddedResource Include="Assets\applogo.png" LogicalName="applogo.png" />
         <EmbeddedResource Include="Assets\dslogo.png" LogicalName="dslogo.png" />
+    </ItemGroup>
+
+    <!-- How-to guides: copied next to the exe (build, publish, MSI and MSIX); the first-launch seed in AppRepository points at them. -->
+    <ItemGroup>
+        <None Include="howto\**" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
     <ItemGroup>

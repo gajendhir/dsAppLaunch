@@ -1,4 +1,4 @@
-Public Class frmMain
+﻿Public Class frmMain
     Private Shared ReadOnly HeaderFont As New Font(Theme.UiSemibold, 10.5F)
 
     Private Const LaunchStaggerMs As Integer = 1000
@@ -14,14 +14,13 @@ Public Class frmMain
 
     Public Sub New()
         InitializeComponent()
-        Icon = Theme.AppIcon()
 
         ' Glyphs and interactive button looks live in code (see Theme): the designer can't express hover/disabled states.
         Theme.StyleIcon(btnReload)
         btnReload.Text = Theme.GlyphRefresh
         Theme.StyleIcon(btnSettings)
         btnSettings.Text = Theme.GlyphSettings
-        Theme.StylePrimary(btnLaunchSelected)
+        Theme.StyleSuccess(btnLaunchSelected)
         Theme.StyleGhost(btnSelectAll)
         Theme.StyleGhost(btnSelectNone)
     End Sub
@@ -30,11 +29,10 @@ Public Class frmMain
         LoadApplications()
     End Sub
 
-    ' Header: logo, a hairline bottom border and a short yellow accent under the logo.
+    ' Header: hairline bottom border and a short yellow accent under the logo (picLogo, set in the designer).
     Private Sub topPanel_Paint(sender As Object, e As PaintEventArgs) Handles topPanel.Paint
         Dim logoSize As Integer = Theme.Scale(topPanel, 44)
         Dim left As Integer = Theme.Scale(topPanel, 18)
-        Theme.DrawLogo(e.Graphics, New Rectangle(left, Theme.Scale(topPanel, 14), logoSize, logoSize))
         Using pen As New Pen(Theme.Border)
             e.Graphics.DrawLine(pen, 0, topPanel.Height - 1, topPanel.Width, topPanel.Height - 1)
         End Using
@@ -43,6 +41,7 @@ Public Class frmMain
         End Using
     End Sub
 
+    ' Footer: hairline on top (the Data Spec logo is picCompanyLogo, set in the designer).
     Private Sub bottomPanel_Paint(sender As Object, e As PaintEventArgs) Handles bottomPanel.Paint
         Using pen As New Pen(Theme.Border)
             e.Graphics.DrawLine(pen, 0, 0, bottomPanel.Width, 0)

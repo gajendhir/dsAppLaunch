@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How To Use Data Spec Application Launcher</title>
+<link rel="stylesheet" href="howto.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="in">
+    <img src="images/applogo.png" alt="dsAppLaunch logo">
+    <div>
+      <h1>How To Use Data Spec Application Launcher</h1>
+      <p>Launch all your everyday programs from one place &mdash; a 5-minute guide</p>
+    </div>
+    <div class="lang"><a href="howto-hi.html" lang="hi">हिन्दी में पढ़ें</a></div>
+  </div>
+</header>
+
+<main>
+
+<nav class="toc" aria-label="Contents">
+  <strong>In this guide</strong>
+  <ol>
+    <li><a href="#what">What it does</a></li>
+    <li><a href="#first">Your first start</a></li>
+    <li><a href="#tour">A tour of the main window</a></li>
+    <li><a href="#add">Add your own programs</a></li>
+    <li><a href="#organise">Group, order and colour</a></li>
+    <li><a href="#launch">Launch one or many</a></li>
+    <li><a href="#card">What is on a card</a></li>
+    <li><a href="#files">Where your list is stored</a></li>
+    <li><a href="#trouble">If something goes wrong</a></li>
+  </ol>
+</nav>
+
+<section id="what">
+  <h2>1. What it does</h2>
+  <p>dsAppLaunch shows the programs you use every day as a grid of cards. Click <span class="btn primary">&#9654; Launch</span> on a card to start that program.
+  Tick several cards and click <span class="btn primary">&#9654; Launch Selected</span> to start them all in one go &mdash; handy for the set of programs you open at the start of every working day.</p>
+  <p>You do not need any technical knowledge. If you can pick a file in a folder window, you can set this up.</p>
+</section>
+
+<section id="first">
+  <h2>2. Your first start</h2>
+  <p>The first time dsAppLaunch opens, it shows a <strong>Getting Started</strong> group with two cards &mdash; this guide in English and in Hindi. Click <span class="btn primary">&#9654; Launch</span> on either card to open the guide in your web browser, any time you need it.</p>
+  <figure>
+    <img src="images/first-run.png" alt="dsAppLaunch the first time it opens, showing two How To cards" loading="lazy">
+    <figcaption>The first start: two guide cards, ready to open.</figcaption>
+  </figure>
+  <div class="tip">
+    <p><strong>Tip:</strong> once you have added your own programs you can remove these two cards (see <a href="#add">section 4</a>). To bring them back later, close the launcher, delete the settings file described in <a href="#files">section 8</a>, and start the launcher again.</p>
+  </div>
+</section>
+
+<section id="tour">
+  <h2>3. A tour of the main window</h2>
+  <figure>
+    <img src="images/main-annotated.png" alt="Main window with numbered markers" loading="lazy">
+    <figcaption>The main window, with three cards ticked.</figcaption>
+  </figure>
+  <ol class="legend">
+    <li><strong>Reload</strong> (circular arrow) &mdash; re-reads your list and clears temporary ticks.</li>
+    <li><strong>Manager</strong> (gear) &mdash; opens the window where you add and edit programs.</li>
+    <li><strong>Tick box</strong> &mdash; select this card for <em>Launch Selected</em>. Ticked cards get an orange outline.</li>
+    <li><strong>Launch</strong> &mdash; start just this program.</li>
+    <li><strong>Small gear</strong> &mdash; open the Manager with this program already selected.</li>
+    <li><strong>Launch Selected (n)</strong> &mdash; start every ticked card; <em>n</em> is how many are ticked. It is grey until you tick at least one.</li>
+    <li><strong>All</strong> &mdash; tick every card.</li>
+    <li><strong>None</strong> &mdash; clear every tick.</li>
+  </ol>
+</section>
+
+<section id="add">
+  <h2>4. Add your own programs</h2>
+  <p>Click the <strong>gear</strong> at the top right to open the <strong>Manager</strong>.</p>
+  <figure>
+    <img src="images/settings-annotated.png" alt="The Manager window with numbered markers" loading="lazy">
+    <figcaption>The Manager. The list is on the left, the details of the selected program on the right.</figcaption>
+  </figure>
+
+  <h3>Two ways to add a program</h3>
+  <ol class="steps">
+    <li><strong>Drag and drop</strong> &mdash; drag a program (an <code>.exe</code> file or a shortcut) from Windows Explorer onto the list. One entry is created for every file you drop. You can also drop a file onto the <em>Executable</em> or <em>Custom Icon</em> boxes to fill them in.</li>
+    <li><strong>Add New</strong> &mdash; click <span class="btn">+ Add New</span>, type a name, click <span class="btn">Browse...</span> next to <em>Executable Path</em> and choose the program.</li>
+  </ol>
+  <p>When you are finished, click <span class="btn primary">Save &amp; Apply Changes</span>. The Manager closes and your cards appear on the main screen. To delete a program, select it in the list and click <span class="btn">- Remove</span>.</p>
+
+  <h3>What each field does</h3>
+  <ol class="legend" style="grid-template-columns:1fr">
+    <li><strong>Configured Applications</strong> &mdash; every program you have added. Click one to edit it.</li>
+    <li><strong>+ Add New</strong> &mdash; create a blank entry.</li>
+    <li><strong>- Remove</strong> &mdash; delete the selected entry.</li>
+    <li><strong>Application Name</strong> &mdash; the title shown on the card.</li>
+    <li><strong>Executable (.exe) Path</strong> &mdash; the program to start. A document or web-page file (such as <code>.pdf</code> or <code>.html</code>) also works A web page or document also works &mdash; Windows opens it with its usual program.mdash; Windows opens it with its usual program.</li>
+    <li><strong>Browse...</strong> &mdash; find the program in a folder window.</li>
+    <li><strong>Custom Icon Path</strong> <em>(optional)</em> &mdash; a picture or icon to show instead of the program&rsquo;s own icon.</li>
+    <li><strong>Group</strong> <em>(optional)</em> &mdash; cards with the same group sit together under one heading, such as <em>Office</em> or <em>Accounts</em>.</li>
+    <li><strong>Sub Group</strong> <em>(optional)</em> &mdash; a second label shown on the card, such as a year or a branch.</li>
+    <li><strong>Category</strong> &mdash; a short label such as <em>Utilities</em>, shown in brackets on the card.</li>
+    <li><strong>Pick Color...</strong> &mdash; colour-code the card (see <a href="#organise">section 5</a>).</li>
+    <li><strong>Description</strong> &mdash; a short note shown on the card.</li>
+    <li><strong>Sort Order (lower first)</strong> &mdash; position of the card within its group. 1 comes before 2, and so on.</li>
+    <li><strong>Include in &lsquo;Launch Selected&rsquo; by default</strong> &mdash; tick this for programs that should already be ticked every time you open the launcher.</li>
+    <li><strong>Save &amp; Apply Changes</strong> &mdash; save everything and return to the main window.</li>
+  </ol>
+  <div class="note">
+    <p><strong>Network programs:</strong> if a program lives on a shared network drive (a path starting with <code>\\</code>), it works on any computer that can reach the same drive.</p>
+  </div>
+</section>
+
+<section id="organise">
+  <h2>5. Group, order and colour</h2>
+  <ul>
+    <li><strong>Groups.</strong> Give related programs the same <em>Group</em> text. They appear together under a heading. Programs with no group are listed under <em>(Ungrouped)</em>.</li>
+    <li><strong>Order.</strong> Within a group the cards follow <em>Sort Order</em> &mdash; lowest number first. This is also the order in which <em>Launch Selected</em> starts them, so put the program that must open first at number 1.</li>
+    <li><strong>Colour.</strong> Click <span class="btn">Pick Color...</span> to colour-code a card. The colour appears as a stripe along the card&rsquo;s left edge and a soft tint. Leave it white for a plain card.</li>
+    <li><strong>Daily set.</strong> Tick <em>Include in &lsquo;Launch Selected&rsquo; by default</em> for the programs you start every morning. Then one click on <span class="btn primary">&#9654; Launch Selected</span> opens them all.</li>
+  </ul>
+</section>
+
+<section id="launch">
+  <h2>6. Launch one or many</h2>
+  <ul>
+    <li><strong>One program:</strong> click <span class="btn primary">&#9654; Launch</span> on its card. The card shows a short &ldquo;starting&rdquo; state while Windows opens the program.</li>
+    <li><strong>Several programs:</strong> tick the box at the top right of each card you want, then click <span class="btn primary">&#9654; Launch Selected (n)</span>. The programs start one after another, about a second apart, in the order they appear on screen.</li>
+  </ul>
+  <figure class="small">
+    <img src="images/main-selected.png" alt="Three cards ticked and the Launch Selected button enabled" loading="lazy">
+    <figcaption>Three cards ticked &mdash; <em>Launch Selected (3)</em> is ready.</figcaption>
+  </figure>
+  <div class="note">
+    <p>Ticks last for the current session. If you click Reload, or save in the Manager, the ticks return to whatever you chose with <em>Include in &lsquo;Launch Selected&rsquo; by default</em>.</p>
+  </div>
+  <p>If a program cannot be started &mdash; for example the file was moved, or a network drive is not connected &mdash; you get one message at the end listing only those programs. The others still start.</p>
+</section>
+
+<section id="card">
+  <h2>7. What is on a card</h2>
+  <figure class="small">
+    <img src="images/card-annotated.png" alt="A single card with numbered markers" loading="lazy">
+  </figure>
+  <ol class="legend">
+    <li><strong>Icon</strong> &mdash; the program&rsquo;s own icon, or your custom icon.</li>
+    <li><strong>Name</strong> &mdash; the Application Name.</li>
+    <li><strong>Sub Group</strong> &mdash; the second label.</li>
+    <li><strong>Modified</strong> &mdash; when the program file was last changed. Double-click it to open the folder that contains the program.</li>
+    <li><strong>[Category] Description</strong> &mdash; your own notes.</li>
+    <li><strong>Tick box</strong> &mdash; select for Launch Selected.</li>
+    <li><strong>Launch</strong> &mdash; start this program.</li>
+    <li><strong>Gear</strong> &mdash; edit this program in the Manager.</li>
+  </ol>
+  <p>Cards for programs on a network drive appear straight away; the icon and date fill in a moment later. If the drive is switched off, that card simply stays plain &mdash; the rest of the launcher keeps working.</p>
+</section>
+
+<section id="files">
+  <h2>8. Where your list is stored</h2>
+  <p>Your list of programs is saved in one file:</p>
+  <pre><code>%AppData%\Data Spec\dsAppLaunch\apps.json</code></pre>
+  <p>To open the folder, press <kbd>Windows</kbd> + <kbd>R</kbd>, paste <code>%AppData%\Data Spec\dsAppLaunch</code> and press <kbd>Enter</kbd>.</p>
+  <ul>
+    <li><strong>Back up</strong> or move to another computer: copy <code>apps.json</code>.</li>
+    <li><strong>Start fresh</strong> (and see the first-start guide cards again): close the launcher, delete <code>apps.json</code>, and start it again.</li>
+    <li>Updating or uninstalling dsAppLaunch does not remove this file, so your list survives a reinstall.</li>
+  </ul>
+</section>
+
+<section id="trouble">
+  <h2>9. If something goes wrong</h2>
+  <table>
+    <tr><th>Problem</th><th>What to do</th></tr>
+    <tr><td>A card says the program was not found</td><td>The file was moved or deleted, or the network drive is not connected. Open the Manager, select the program and check the <em>Executable Path</em>.</td></tr>
+    <tr><td>The Manager will not open and mentions <code>apps.json</code></td><td>The settings file was damaged, usually by a manual edit. Fix the text the message points to, or delete the file and add your programs again.</td></tr>
+    <tr><td>A card has no icon or date</td><td>The program&rsquo;s file cannot be reached (yet). Wait a few seconds, or click Reload.</td></tr>
+    <tr><td>I changed something outside the launcher and it is not showing</td><td>Click Reload.</td></tr>
+    <tr><td>The guide cards do not open</td><td>The guide files live in the <code>howto</code> folder next to the program. If you moved or deleted that folder, reinstall dsAppLaunch or remove the two cards.</td></tr>
+  </table>
+</section>
+
+</main>
+
+<footer>
+  Data Spec Application Launcher &middot; Software by <a href="https://www.dataspec.info">Data Spec</a> &middot;
+  <a href="howto-hi.html" lang="hi">हिन्दी में पढ़ें</a>
+</footer>
+
+</body>
+</html>

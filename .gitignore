@@ -25,3 +25,6 @@ Installer/obj/
 # OS cruft
 Thumbs.db
 Desktop.ini
+
+# Store packaging output
+Store/out/

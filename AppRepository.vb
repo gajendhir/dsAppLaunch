@@ -1,4 +1,4 @@
-Imports System.IO
+﻿Imports System.IO
 Imports System.Text.Json
 
 Public Class AppRepository
@@ -14,17 +14,65 @@ Public Class AppRepository
     Private Shared ReadOnly LegacyPath As String = Path.Combine(AppContext.BaseDirectory, FileName)
 
     Private Shared ReadOnly ReadOptions As New JsonSerializerOptions With {.PropertyNameCaseInsensitive = True}
-    Private Shared ReadOnly WriteOptions As New JsonSerializerOptions With {.WriteIndented = True}
+    Private Shared ReadOnly WriteOptions As New JsonSerializerOptions With {.WriteIndented = True, .Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping}
+
+    ' The empty-file check runs once per app start, so emptying the list in Manager doesn't re-seed on the next reload.
+    Private Shared emptyCheckDone As Boolean = False
 
     Public Shared Sub EnsureExists()
-        If File.Exists(FilePath) Then Return
+        If File.Exists(FilePath) Then
+            ' An empty list ("[]", e.g. created by an earlier version) counts as a first launch too.
+            If Not emptyCheckDone Then
+                emptyCheckDone = True
+                If IsEmptyList() Then Save(SeedApps())
+            End If
+            Return
+        End If
         Directory.CreateDirectory(Path.GetDirectoryName(FilePath))
         If File.Exists(LegacyPath) Then
             File.Copy(LegacyPath, FilePath)
         Else
-            File.WriteAllText(FilePath, "[]")
+            Save(SeedApps())
         End If
     End Sub
+
+    ''' <summary>True only for a readable file holding an empty JSON array; a damaged file is left for Load to report.</summary>
+    Private Shared Function IsEmptyList() As Boolean
+        Try
+            Dim apps = JsonSerializer.Deserialize(Of List(Of AppConfig))(File.ReadAllText(FilePath), ReadOptions)
+            Return apps IsNot Nothing AndAlso apps.Count = 0
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
+
+    ''' <summary>
+    ''' First-launch content: cards that open the bundled how-to guides (howto\howto-en.html and howto-hi.html next
+    ''' to the exe). Only guides that are actually present are seeded; with none (a bare build) the list starts empty.
+    ''' </summary>
+    Private Shared Function SeedApps() As List(Of AppConfig)
+        Dim guides As (FileName As String, Name As String, Description As String, Color As String, Order As Integer)() = {
+            ("howto-en.html", "How To (English)", "Step-by-step guide", "#E8F1FB", 1),
+            ("howto-hi.html", "कैसे करें (हिन्दी)", "चरण-दर-चरण गाइड", "#FDF1E3", 2)
+        }
+        Dim seeds As New List(Of AppConfig)()
+        For Each g In guides
+            Dim path As String = System.IO.Path.Combine(AppContext.BaseDirectory, "howto", g.FileName)
+            If Not File.Exists(path) Then Continue For
+            seeds.Add(New AppConfig With {
+                .Name = g.Name,
+                .ExecutablePath = path,
+                .IconPath = System.IO.Path.Combine(AppContext.BaseDirectory, "howto", "images", "applogo.png"),
+                .Category = "Help",
+                .Description = g.Description,
+                .Group = "Getting Started",
+                .SubGroup = "How To",
+                .CardColor = g.Color,
+                .SortOrder = g.Order
+            })
+        Next
+        Return seeds
+    End Function
 
     ''' <summary>Returns an empty list if the file is missing; throws if it cannot be read or parsed.</summary>
     Public Shared Function Load() As List(Of AppConfig)

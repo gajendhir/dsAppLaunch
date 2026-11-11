@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap rescap">
+
+  <!-- Identity values come from Partner Center > Product identity. Version is stamped by build-msix.ps1. -->
+  <Identity Name="DataSpec.dsAppLauncher"
+            Publisher="CN=DFDC9FBA-D8EA-4CCB-A064-A1E9BB6B2779"
+            Version="0.0.0.0"
+            ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>Data Spec App Launcher</DisplayName>
+    <PublisherDisplayName>Data Spec</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19045.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Applications>
+    <Application Id="App" Executable="dsAppLaunch.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="Data Spec App Launcher"
+                          Description="Card-grid launcher for your desktop applications."
+                          BackgroundColor="transparent"
+                          Square150x150Logo="Assets\Square150x150Logo.png"
+                          Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <!-- Restricted capability: the app's purpose is to start the user's own installed desktop apps. -->
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>
